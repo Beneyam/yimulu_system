@@ -1,0 +1,501 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Purchase;
+use App\yimulu_sales;
+use App\User;
+use App\yimulu_sales_type;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
+use App\System_balance;
+use App\Transaction;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
+use App\Yimulu_sale;
+use App\yimulu_sales_sales_sync;
+use Exception;
+use Session;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+
+class yimulu_salesController extends Controller
+{
+    //
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    public function index()
+    {
+
+        $yimulu_saless = yimulu_sales::all();
+        //dd($yimulu_saless);
+        return view('yimulu_saless.index', ['yimulu_saless' => $yimulu_saless]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+        return view('yimulu_saless.create');
+    }
+    public function reprint()
+    {
+        //
+        $agents = User::where('parent_id', '!=', 1)->orWhere('id', '!=', '1')->select('id', 'phone_number', 'name')->get();
+
+        return view('yimulu_saless.reprint',['agents'=>$agents]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param;  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+
+
+        //
+        //dd($request);
+        $vtest = Purchase::where('order_number', $request->order_number)->first();
+        if (isset($vtest->id)) {
+            $warnning_message = "Order already exists";
+        }
+
+        //  $this->validateUploads($request);
+
+        $files = $request->file('evd_file');
+        $error = 0;
+        //DB::beginTransaction();
+        $mycount = 0;
+        $yimulu_saless = [];
+        $activations = [];
+        foreach ($files as $file) {
+            $fileName = $file->getClientOriginalName();
+            $path = $file->getRealPath();
+            // return response()->json(['status' => '0', 'message' =>$path], 200);
+
+            try {
+                $contents = File::get($path);
+            } catch (Exception $ex) {
+                return response()->json(['status' => '0', 'message' => $ex->getMessage() . $file->getSize()], 200);
+            }
+            $vars = explode("Quantity:", $contents);
+            if (count($vars) != 2) {
+                return response()->json(['status' => '0', 'message' => 'invalid file format - Quantity'], 200);
+            }
+            $vars = explode("yimulu_salestype:", $vars[1]);
+            if (count($vars) != 2) {
+                return response()->json(['status' => '0', 'message' => 'invalid file format - type'], 200);
+            }
+            $quantity = $vars[0];
+            $vars = explode("FaceValue:", $vars[1]);
+            if (count($vars) != 2) {
+                return response()->json(['status' => '0', 'message' => 'invalid file format - value'], 200);
+            }
+
+            $vars = explode("StopDate:", $vars[1]);
+
+            if (count($vars) != 2) {
+                return response()->json(['status' => '0', 'message' => 'invalid file format - date'], 200);
+            }
+            $face_value = $vars[0];
+            $yimulu_sales_type = yimulu_sales_type::where('face_value', $face_value)->first();
+            if (!isset($yimulu_sales_type->id)) {
+                return response()->json(['status' => '0', 'message' => 'invalid yimulu_salestype detected on ' . $fileName], 200);
+            }
+            $vars = explode("Start_Sequence:", $vars[1]);
+
+            if (count($vars) != 2) {
+                return response()->json(['status' => '0', 'message' => 'invalid file format - start'], 200);
+            }
+            $date = $vars[0];
+            $stop_date = $date[0] . $date[1] . $date[2] . $date[3] . "-" . $date[4] . $date[5] . "-" . $date[6] . $date[7];
+            $vars = explode("[BEGIN]", $vars[1]);
+            if (count($vars) != 2) {
+                return response()->json(['status' => '0', 'message' => 'invalid file format - begin'], 200);
+            }
+            $vars = explode("[END]", $vars[1]);
+            if (count($vars) != 2) {
+                return response()->json(['status' => '0', 'message' => 'invalid file format - end'], 200);
+            }
+            $values = $vars[0];
+
+            $values = trim($values);
+            $rows = preg_split("/\r\n|\n|\r/", $values);
+            $c_yimulu_saless = [];
+            $cc_yimulu_saless = [];
+            $pc = 1;
+            if ($quantity != count($rows)) {
+                return response()->json(['status' => '0', 'message' => 'The given quantity(' . $quantity . ') and number of yimulu_saless(' . count($rows) . ') are different on' . $fileName], 200);
+            }
+
+            foreach ($rows as $row) {
+                $row_data = explode(' ', $row);
+                $yimulu_saless[] =
+                    [
+                        'serial_number' => trim($row_data[0]),
+                        'pin_number' => trim($row_data[1]),
+                        'expire_date' => trim($stop_date),
+                        'face_value' => trim($face_value),
+                        'yimulu_sales_type_id' => $yimulu_sales_type->id
+                    ];
+                $c_yimulu_saless[] = $row_data[0];
+                $cc_yimulu_saless[] = $row_data[0];
+                $pc++;
+                if ($pc > 10000) {
+                    $v_count = yimulu_sales::whereIn('serial_number', $c_yimulu_saless)->count();
+                    if ($v_count > 0) {
+                        //dd($v_count);
+                        return response()->json(['status' => '0', 'message' => $v_count . ' Duplicated serials on ' . $fileName], 200);
+                    }
+                    $c_yimulu_saless = [];
+                    $pc = 1;
+                }
+            }
+            //return response()->json(['status' => '0', 'message' => $c_yimulu_saless], 200); 
+            $v_count = yimulu_sales::whereIn('serial_number', $c_yimulu_saless)->count();
+            if ($v_count > 0) {
+                return response()->json(['status' => '0', 'message' => 'Duplicated serials on ' . $pc . " " . $fileName], 200);
+            }
+            $activations[] = ['stop_date' => $stop_date, 'quantity' => $quantity, 'face_value' => $face_value, 'file_name' => $fileName, 'b_sn' => $cc_yimulu_saless[0], 'e_sn' => $cc_yimulu_saless[count($rows) - 1]];
+            //return response()->json(['status' => '0', 'message' => $activations[0]['b_sn']], 200); 
+        }
+        //Session::put('key', 'value');
+        Session::put('yimulu_saless', $yimulu_saless);
+        Session::put('order_number', $request->order_number);
+        Session::put('amount', $request->amount);
+        return response()->json(['status' => '1', 'message' => $activations[0]['b_sn'], 'activations' => $activations, 'order_number' => $request->order_number], 200);
+
+
+        //return json_encode();
+        // return $activation;
+        // return redirect()->route('yimulu_saless.approval_list', ['avtivations', $activation]);
+    }
+
+    public function approve(Request $request)
+    {
+        $user = Auth::user();
+        // dd(Session::all());
+        if (!Session::has('yimulu_saless') || !Session::has('order_number')) {
+            return response()->json(['status' => '0', 'message' => 'No Session Data'], 200);
+        }
+        //dd($request->session('yimulu_saless'));
+        $yimulu_saless = Session::get('yimulu_saless');
+        $order_number = Session::get('order_number');
+        $amount = Session::get('amount');
+        DB::beginTransaction();
+        $purchase = new Purchase();
+        $purchase->order_number = $order_number;
+        $purchase->amount = $amount;
+        $purchase->save();
+
+        $iserror = 0;
+        $new_system_balance = 0;
+        $vImport = [];
+        $vc = 1;
+        foreach ($yimulu_saless as $yimulu_sales) {
+
+
+            $vImport[] = [
+                'yimulu_sales_type_id' => $yimulu_sales['yimulu_sales_type_id'],
+                'serial_number' => $yimulu_sales['serial_number'],
+                'pin_number' => $yimulu_sales['pin_number'],
+                'yimulu_sales_status' => 1,
+                'expire_date' => $yimulu_sales['expire_date'],
+                'purchase_id' => $purchase->id
+            ];
+            $vc++;
+            if ($vc > 10000) {
+                try {
+                    yimulu_sales::insert($vImport);
+                    $vImport = [];
+                } catch (QueryException $ex) {
+                    $iserror = 1;
+                    $error_message = (strpos($ex->getMessage(), 'Duplicate entry') != false) ? "Duplicate Entry for " : $ex->getMessage();
+                    //$error_message = $msg . $yimulu_sales['face_value'] . ' birr card with serial ' . $yimulu_sales['serial_number'];
+                    //  $error_message.=$ex->getMessage
+                    break;
+                }
+            }
+            $new_system_balance += $yimulu_sales['face_value'];
+        }
+
+        try {
+            yimulu_sales::insert($vImport);
+        } catch (QueryException $ex) {
+            $iserror = 1;
+            $error_message = (strpos($ex->getMessage(), 'Duplicate entry') != false) ? "Duplicate Entry for " : $ex->getMessage();;
+            //$error_message = $msg . $yimulu_sales['face_value'] . ' birr card with serial ' . $yimulu_sales['serial_number'];
+            // break;
+            //$error_message.=$ex->getMessage();
+        }
+        /*if (!isset($vImport->id)) {
+            $iserror = 1;
+            $error_message = 'Error occurred in saving ' . $yimulu_sales['face_value'] . ' birr card with serial ' . $yimulu_sales['serial_number'];
+            break;
+        }*/
+
+        if ($iserror) {
+            DB::rollback();
+            return response()->json(['status' => '0', 'message' => $error_message], 200);
+        }
+        $oldSystemBalance = $this->getSystemBalance();
+        $systemBalance = new System_balance();
+        $systemBalance->purchase_id = $purchase->id;
+        $systemBalance->balance = $oldSystemBalance + $new_system_balance;
+        $systemBalance->begining_balance = $oldSystemBalance;
+        $systemBalance->performed_by = $user->id;
+        $systemBalance->amount = $new_system_balance;
+        $systemBalance->save();
+
+
+
+        if (isset($purchase->id) && isset($systemBalance->id)) {
+            // Else commit the queries
+
+            DB::commit();
+            Session::forget('order_number');
+            Session::forget('yimulu_saless');
+            return response()->json(['status' => '1', 'message' => 'Successfully uploaded!'], 200);
+
+            //  return view('yimulu_saless.create', ['success_message' => 'successfully Uploaded']);
+        }
+        DB::rollback();
+        return response()->json(['status' => '0', 'message' => 'Error occurred'], 200);
+
+        // return back()->with('error_message',  'Error Occurred');
+
+    }
+
+    public function search(Request $request)
+    {
+        $yimulu_saless = [];
+
+        $selected_id = 0;
+        if (($request->agent_id > 1) && isset($request->serial_number)) {
+            $selected_id = $request->agent_id;
+
+            $yimulu_saless = DB::table('yimulu_sales')
+                ->join('yimulu_saless', 'yimulu_saless.id', '=', 'yimulu_sales.yimulu_sales_id')
+                ->join('yimulu_sales_types', 'yimulu_saless.yimulu_sales_type_id', '=', 'yimulu_sales_types.id')
+                ->join('users as agent', 'agent.id', '=', 'yimulu_sales.user_id')
+                ->join('purchases as order', 'order.id', '=', 'yimulu_saless.purchase_id')
+                ->join('sales_types', 'sales_types.id', '=', 'yimulu_sales.sales_type')
+                ->leftJoin('yimulu_sales_sales_syncs','yimulu_sales.id','=','yimulu_sales_sales_syncs.yimulu_sales_sales_id')
+                ->select(DB::raw('yimulu_sales.id,yimulu_sales.yimulu_sales_id as yimulu_sales_id,yimulu_saless.serial_number, sales_types.type as sales_type, yimulu_sales.phone_number as filled_to, order.order_number, agent.name as agent, yimulu_saless.created_at as date_added, DATE(yimulu_saless.expire_date) as expire_date, yimulu_sales.created_at as date_sold,yimulu_sales.retrys, yimulu_sales.is_printable, yimulu_sales_types.face_value,yimulu_sales.status,yimulu_sales.updated_at, count(yimulu_sales_sales_syncs.id) as sync_count'))
+                ->where('agent.id',$request->agent_id)
+                ->where('yimulu_saless.serial_number', 'like', '%' . $request->serial_number . '%')
+
+                ->limit(2000)
+                ->groupBy('yimulu_sales.id')
+                ->orderBy('yimulu_sales.id', 'desc')
+                ->get();
+        } elseif ($request->agent_id > 1) {
+            $selected_id = $request->agent_id;
+
+            $yimulu_saless = DB::table('yimulu_sales')
+                ->join('yimulu_saless', 'yimulu_saless.id', '=', 'yimulu_sales.yimulu_sales_id')
+                ->join('yimulu_sales_types', 'yimulu_saless.yimulu_sales_type_id', '=', 'yimulu_sales_types.id')
+                ->join('users as agent', 'agent.id', '=', 'yimulu_sales.user_id')
+                ->join('purchases as order', 'order.id', '=', 'yimulu_saless.purchase_id')
+                ->join('sales_types', 'sales_types.id', '=', 'yimulu_sales.sales_type')
+<<<<<<< Updated upstream
+                ->leftJoin('yimulu_sales_sales_syncs','yimulu_sales.id','=','yimulu_sales_sales_syncs.yimulu_sales_sales_id')
+                ->select(DB::raw('yimulu_sales.id,yimulu_sales.yimulu_sales_id as yimulu_sales_id,yimulu_saless.serial_number, sales_types.type as sales_type, yimulu_sales.phone_number as filled_to, order.order_number, agent.name as agent, yimulu_saless.created_at as date_added, DATE(yimulu_saless.expire_date) as expire_date, yimulu_sales.created_at as date_sold,yimulu_sales.retrys, yimulu_sales.is_printable, yimulu_sales_types.face_value,yimulu_sales.status,yimulu_sales.updated_at, count(yimulu_sales_sales_syncs.id) as sync_count'))
+                ->where('agent.id',$request->agent_id)
+=======
+                ->leftJoin('yimulu_sales_sales_syncs', 'yimulu_sales.id', '=', 'yimulu_sales_sales_syncs.yimulu_sales_sales_id')
+                ->select(DB::raw('yimulu_sales.yimulu_sales_id as yimulu_sales_id,yimulu_saless.serial_number, sales_types.type as sales_type, yimulu_sales.phone_number as filled_to, order.order_number, agent.name as agent, yimulu_saless.created_at as date_added, DATE(yimulu_saless.expire_date) as expire_date, yimulu_sales.created_at as date_sold,yimulu_sales.retrys, yimulu_sales.is_printable, yimulu_sales_types.face_value,yimulu_sales.status,yimulu_sales.updated_at, count(yimulu_sales_sales_syncs.id) as sync_count'))
+                ->where('agent.id', $request->agent_id)
+>>>>>>> Stashed changes
+                ->limit(2000)
+                ->groupBy('yimulu_sales.id')
+                ->orderBy('yimulu_sales.id', 'desc')
+                ->get();
+        } elseif (isset($request->serial_number)) {
+            $yimulu_saless = DB::table('yimulu_sales')
+                ->join('yimulu_saless', 'yimulu_saless.id', '=', 'yimulu_sales.yimulu_sales_id')
+                ->join('yimulu_sales_types', 'yimulu_saless.yimulu_sales_type_id', '=', 'yimulu_sales_types.id')
+                ->join('users as agent', 'agent.id', '=', 'yimulu_sales.user_id')
+                ->join('purchases as order', 'order.id', '=', 'yimulu_saless.purchase_id')
+                ->join('sales_types', 'sales_types.id', '=', 'yimulu_sales.sales_type')
+                ->leftJoin('yimulu_sales_sales_syncs', 'yimulu_sales.id', '=', 'yimulu_sales_sales_syncs.yimulu_sales_sales_id')
+<<<<<<< Updated upstream
+                ->select(DB::raw('yimulu_sales.id,yimulu_sales.yimulu_sales_id as yimulu_sales_id,yimulu_saless.serial_number, sales_types.type as sales_type, yimulu_sales.phone_number as filled_to, order.order_number, agent.name as agent, yimulu_saless.created_at as date_added, DATE(yimulu_saless.expire_date) as expire_date, yimulu_sales.created_at as date_sold,yimulu_sales.retrys, yimulu_sales.is_printable, yimulu_sales_types.face_value,yimulu_sales.status,yimulu_sales.updated_at, count(yimulu_sales_sales_syncs.id) as sync_count'))                
+=======
+                ->select(DB::raw('yimulu_sales.yimulu_sales_id as yimulu_sales_id,yimulu_saless.serial_number, sales_types.type as sales_type, yimulu_sales.phone_number as filled_to, order.order_number, agent.name as agent, yimulu_saless.created_at as date_added, DATE(yimulu_saless.expire_date) as expire_date, yimulu_sales.created_at as date_sold,yimulu_sales.retrys, yimulu_sales.is_printable, yimulu_sales_types.face_value,yimulu_sales.status,yimulu_sales.updated_at, count(yimulu_sales_sales_syncs.id) as sync_count'))
+>>>>>>> Stashed changes
+                ->where('yimulu_saless.serial_number', 'like', '%' . $request->serial_number . '%')
+                ->limit(2000)
+                ->groupBy('yimulu_sales.id')
+                ->orderBy('yimulu_sales.id', 'desc')
+                ->get();
+        }
+        //  dd($yimulu_saless);
+        //
+        $agents = User::where('parent_id', '!=', 1)->orWhere('id', '!=', '1')->select('id', 'phone_number', 'name')->get();
+        return view('yimulu_saless/search', ['yimulu_saless' => $yimulu_saless, 'agents' => $agents, 'selected_id' => $selected_id]);
+    }
+    public function salesDetail(Yimulu_sale $sale)
+    {
+        $syncs=yimulu_sales_sales_sync::join('sales_types','sales_types.id','=','yimulu_sales_sales_syncs.sales_type_id')
+        ->leftJoin('users','users.id','=','yimulu_sales_sales_syncs.user_id')
+        ->where('yimulu_sales_sales_id',$sale->id)
+        ->select('sales_types.type','yimulu_sales_sales_syncs.created_at','yimulu_sales_sales_syncs.count','users.name','users.phone_number')
+        ->limit(100)
+        ->get();
+        return view('yimulu_saless/salesdetails', ['sale' => $sale,'syncs'=>$syncs]);
+
+    }
+    public function allowReprint(Request $request)
+    {
+        if (isset($request->yimulu_sales_id)) {
+            $sales = Yimulu_sale::where('yimulu_sales_id', $request->yimulu_sales_id)->orderBy('id', 'desc')->first();
+            if (isset($sales->id)) {
+                $sales->is_printable = 1;
+                $sales->save();
+                return back()->with('success_message',  'yimulu_salesis now printable');
+            } else {
+                return back()->with('error_message',  'No sales');
+            }
+        } else {
+            return back()->with('error_message',  'Error Occurred');
+        }
+    }
+
+    public function allowBatchReprint(Request $request)
+    {
+        if (isset($request->f_serial_number) && isset($request->l_serial_number) && isset($request->agent_id)) {
+            $s_serial = min([$request->f_serial_number, $request->l_serial_number]);
+            $e_serial = max([$request->f_serial_number, $request->l_serial_number]);
+            if (abs($s_serial - $e_serial) <= 50) {
+                $cc = 0;
+                $serial = $s_serial;
+                while ($serial <= $e_serial) {
+                    $yimulu_sales= yimulu_sales::where('serial_number', $serial)->first();
+                    if (isset($yimulu_sales->id)) {
+                        $sales = Yimulu_sale::where('yimulu_sales_id', $yimulu_sales->id)
+                            ->where('user_id', $request->agent_id)
+                            ->first();
+                        if (isset($sales->id)) {
+                            $sales->is_printable = 1;
+                            $sales->save();
+                            $cc++;
+                        }
+                    }
+                    $serial++;
+                }
+                return back()->with('success_message',  $cc . ' yimulu_saless Allowed');
+            }
+            return back()->with('error_message',  'The range between the serials must be less than 50');
+        }
+
+
+        return back()->with('error_message',  'Error Occurred');
+    }
+    public function changeSync(Request $request)
+    {
+        if (isset($request->yimulu_sales_id)) {
+            $sales = Yimulu_sale::where('yimulu_sales_id', $request->yimulu_sales_id)->orderBy('id', 'desc')->first();
+            if (isset($sales->id)) {
+                $sales->status = 0;
+                $sales->save();
+                return back()->with('success_message',  'yimulu_salesstatus changed');
+            } else {
+                return back()->with('error_message',  'No sales');
+            }
+        } else {
+            return back()->with('error_message',  'Error Occurred');
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\yimulu_sales $yimulu_sales
+     * @return \Illuminate\Http\Response
+     */
+    public function show(yimulu_sales$yimulu_sales)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\yimulu_sales $yimulu_sales
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(yimulu_sales$yimulu_sales)
+    {
+
+        if (Gate::denies('manage-system')) {
+            //dd($yimulu_sales->hasRole('Agent Manager'));
+            return redirect(route('yimulu_saless.index'));
+        }
+        /* $yimulu_sales= yimulu_sales::find($id);
+        //dd($yimulu_sales);
+        // Redirect to product list if updating product wasn't existed
+        if ($yimulu_sales== null || count($yimulu_sales->all()) == 0) {
+            return redirect()->intended('/admin/yimulu_saless/index');
+        }*/
+        return view('yimulu_saless.edit', ['yimulu_sales' => $yimulu_sales]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\yimulu_sales $yimulu_sales
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, yimulu_sales$yimulu_sales)
+    {
+
+        $this->validateInput($request);
+        $yimulu_sales->status = $request['status'];
+        $yimulu_sales->save();
+        return view('yimulu_saless.index', ['success_message' => 'successfully updated']);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\yimulu_sales $yimulu_sales
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(yimulu_sales$yimulu_sales)
+    {
+        //
+    }
+    public function getSystemBalance()
+    {
+        $balance = System_balance::select('id', 'balance')->orderBy('id', 'desc')->first();
+        //dd($balance);
+        return isset($balance->balance) ? $balance->balance : 0;
+    }
+
+    private function validateInput($request)
+    {
+        $this->validate($request, [
+            'status' => 'required|max:20|',
+        ]);
+    }
+    private function validateUploads($request)
+    {
+        $this->validate($request, [
+            'evd_file' => "required",
+            'order_number' => "required|numeric",
+
+        ]);
+    }
+}
