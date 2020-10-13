@@ -326,9 +326,36 @@ class StatController extends Controller
     }
     public static function getSystemBalance()
     {
+        $dt = Carbon::now();
+        $message = "<?xml version=\"1.0\"?>
+<COMMAND>             
+<TYPE>EXUSRBALREQ</TYPE>
+<DATE>" . $dt->toDateString() . "</DATE>
+<EXTNWCODE>ET</EXTNWCODE>
+<MSISDN>962586148</MSISDN>
+<PIN>3214</PIN>
+<LOGINID></LOGINID>
+<PASSWORD></PASSWORD>
+<EXTCODE></EXTCODE>
+<EXTREFNUM>NAZ000163917557</EXTREFNUM>
+</COMMAND>";
+        $response = Http::withHeaders(['Content-Type' => 'text/xml; charset=utf-8'])->send('POST', 'https://10.208.254.131/pretups/C2SReceiver?LOGIN=nazret1&PASSWORD=70c0ad9d73cafc653ba10ee56ce10033&REQUEST_GATEWAY_CODE=nazret&REQUEST_GATEWAY_TYPE=EXTGW&SERVICE_PORT=190&SOURCE_TYPE=EXTGW', ['body' => $message, 'verify' => false]);
+        
+        $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
+        //dd($clean_xml);
+        $cxml = simplexml_load_string($clean_xml);
 
-        $balance = System_balance::orderBy('id', 'desc')->first();
-        return isset($balance->balance) ? $balance->balance : 0;
+        //dd($cxml->RECORD->BALANCE);
+        $balance=0;
+        try
+        {
+            $balance = $cxml->RECORD->BALANCE;
+        }
+        catch(Exception $ex)
+        {
+            $balance=-1;
+        }
+
     }
     
    

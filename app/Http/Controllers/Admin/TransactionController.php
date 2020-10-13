@@ -23,6 +23,7 @@ use phpseclib\Crypt\RSA as Crypt_RSA;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\StatController;
+use Exception;
 
 class TransactionController extends Controller
 {
@@ -527,9 +528,17 @@ class TransactionController extends Controller
         //dd($clean_xml);
         $cxml = simplexml_load_string($clean_xml);
 
-        dd($cxml->RECORD->BALANCE);
-        $balance = System_balance::orderBy('id', 'desc')->lockForUpdate()->first();
-        return isset($balance->balance) ? $balance->balance : 0;
+        //dd($cxml->RECORD->BALANCE);
+        $balance=0;
+        try
+        {
+            $balance = $cxml->RECORD->BALANCE;
+        }
+        catch(Exception $ex)
+        {
+            $balance=-1;
+        }
+        return $balance;
     }
     private function validateTransactionInput($request)
     {
