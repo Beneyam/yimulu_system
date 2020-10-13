@@ -532,13 +532,12 @@ class TransactionController extends Controller
         $balance=0;
         try
         {
-            $balance = $cxml->RECORD->BALANCE["0"];
+            $balance = $cxml->RECORD->BALANCE;
         }
         catch(Exception $ex)
         {
             $balance=-1;
         }
-        //dd($balance);
         return $balance;
     }
     private function validateTransactionInput($request)
