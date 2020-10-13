@@ -21,13 +21,7 @@ class DashboardAPI extends Controller
     {
         
         $system_balance = StatController::getSystemBalance(); //ok
-        //$system_cards = StatController::getRemainingCards();//Separate
-        //$agentsStats = StatController::getTotalAgentStats();//separate
-        //$user_stats=StatController::getAllAgentStat();//separate
-   
-        //$sales=StatController::getTodaysSales();//separate
-        //$todays_sales=isset($sales->amount)?($sales->amount+0):0;
-
+    
         $txs=StatController::getTodaysRefills();//ok
         $txs_sta=isset($txs['system_to_agent']['total'])?($txs['system_to_agent']['total']):0;
         $txs_ata=isset($txs['agents_to_agents']['total'])?($txs['agents_to_agents']['total']):0;
