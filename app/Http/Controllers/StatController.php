@@ -355,7 +355,7 @@ class StatController extends Controller
         {
             $balance=-1;
         }
-
+        return $balance;
     }
     
    
