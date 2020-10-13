@@ -538,6 +538,7 @@ class TransactionController extends Controller
         {
             $balance=-1;
         }
+        dd($balance);
         return $balance;
     }
     private function validateTransactionInput($request)
