@@ -526,7 +526,8 @@ class TransactionController extends Controller
         $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
         //dd($clean_xml);
         $cxml = simplexml_load_string($clean_xml);
-        dd($cxml);
+
+        dd($cxml->RECORD[0]->BALANCE);
         $balance = System_balance::orderBy('id', 'desc')->lockForUpdate()->first();
         return isset($balance->balance) ? $balance->balance : 0;
     }
