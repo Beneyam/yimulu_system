@@ -153,8 +153,10 @@ class TransactionController extends Controller
             $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
             //dd($clean_xml);
             $cxml = simplexml_load_string($clean_xml);
-
-            dd(["myMessage"=>$cxml->MESSAGE[0],"txID"=>$cxml->TXNID[0]]);
+            $json = json_encode($cxml);
+            $array = json_decode($json,TRUE);
+           dd($array);
+            //dd(["myMessage"=>$cxml->MESSAGE[0],"txID"=>$cxml->TXNID[0]]);
             return response()->json(['success' => 'true', 'xmlmessage' => $message, 'encrypted' => base64_encode($output)], 200);
             return back()->with('success_message', $message);
 
@@ -526,13 +528,12 @@ class TransactionController extends Controller
         
         $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
         //dd($clean_xml);
-        $cxml = simplexml_load_string($clean_xml);
-
-        //dd($cxml->RECORD->BALANCE);
+        $json = json_encode($cxml);
+        $array = json_decode($json,TRUE);
         $balance=0;
         try
         {
-            $balance = $cxml->RECORD->BALANCE;
+            $balance = $array['RECORD']['BALANCE'];
         }
         catch(Exception $ex)
         {
