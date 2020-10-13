@@ -199,7 +199,7 @@ class TransactionController extends Controller
         DB::beginTransaction();
         $oldBalance = $this->getSystemBalance();
 
-        dd($oldBalance);
+        //dd($oldBalance);
         $oldAgentBalance = $this->getAgentBalance($agent);
         $agentsBalance = StatController::getTotalAgentStats();
         //dd($oldAgentDebt);
