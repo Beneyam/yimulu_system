@@ -351,7 +351,7 @@ class StatController extends Controller
         $balance=0;
         try
         {
-            $balance = $array->RECORD->BALANCE;
+            $balance = $array['RECORD']['BALANCE'];
         }
         catch(Exception $ex)
         {
