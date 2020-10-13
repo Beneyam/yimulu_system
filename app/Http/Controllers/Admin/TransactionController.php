@@ -148,7 +148,7 @@ class TransactionController extends Controller
         $array = json_decode($json,TRUE);
         //dd($array);
         $status=$array['TXNSTATUS'];
-        $sysmsg=$array['MESSAGE']
+        $sysmsg=$array['MESSAGE'];
         if (!$agentBalance || !$sales || $status!="200") {
             DB::rollback();
             return back()->with('error_message', 'Error Occured: '.$sysmsg);
