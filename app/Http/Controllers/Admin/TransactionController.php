@@ -104,61 +104,62 @@ class TransactionController extends Controller
         // dd($agentBalance)
         $dt = Carbon::now();
 
+        $message = "<?xml version=\"1.0\"?>
+        <COMMAND>             
+        <TYPE>EXRCTRFREQ</TYPE>
+        <DATE>" . $dt->toDateString() . "</DATE>
+        <EXTNWCODE>ET</EXTNWCODE>
+        <MSISDN>962586148</MSISDN>
+        <PIN>3214</PIN>
+        <LOGINID></LOGINID>
+        <PASSWORD></PASSWORD>
+        <EXTCODE></EXTCODE>
+        <EXTREFNUM>NAZ000163917557</EXTREFNUM>
+        <MSISDN2>" . $phone_number . "</MSISDN2>  
+        <AMOUNT>" . $amount . "</AMOUNT>
+        <LANGUAGE1>0</LANGUAGE1>
+        <LANGUAGE2>1</LANGUAGE2>
+        <SELECTOR>1</SELECTOR></COMMAND>";
+        if ($sales_type == 1) {
+        $message = "<?xml version=\"1.0\"?>
+            <COMMAND>
+            <TYPE>EXPPBREQ</TYPE>              
+            <DATE>" . $dt->toDateString() . "</DATE>
+            <MSISDN>962586148</MSISDN>
+            <PIN>3214</PIN>
+            <LOGINID></LOGINID>
+            <PASSWORD></PASSWORD>
+            <EXTCODE></EXTCODE>
+            <EXTREFNUM>NAZ000163917557</EXTREFNUM>
+            <MSISDN2>" . $phone_number . "</MSISDN2>  
+            <AMOUNT>" . $amount . "</AMOUNT>         
+            <LANGUAGE1>0</LANGUAGE1>
+            <LANGUAGE2>1</LANGUAGE2>
+            <SELECTOR>1</SELECTOR>
+            </COMMAND> ";
+        }
 
-        if (!$agentBalance || !$sales) {
+        $response = Http::withHeaders(['Content-Type' => 'text/xml; charset=utf-8'])->send('POST', 'https://10.208.254.131/pretups/C2SReceiver?LOGIN=nazret1&PASSWORD=70c0ad9d73cafc653ba10ee56ce10033&REQUEST_GATEWAY_CODE=nazret&REQUEST_GATEWAY_TYPE=EXTGW&SERVICE_PORT=190&SOURCE_TYPE=EXTGW', ['body' => $message, 'verify' => false]);
+        //dd($response->body());
+        $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
+        //dd($clean_xml);
+        $cxml = simplexml_load_string($clean_xml);
+        $json = json_encode($cxml);
+        $array = json_decode($json,TRUE);
+        //dd($array);
+        $status=$array['TXNSTATUS'];
+        $sysmsg=$array['MESSAGE']
+        if (!$agentBalance || !$sales || $status!="200") {
             DB::rollback();
-            return back()->with('error_message', 'Error Occured');
+            return back()->with('error_message', 'Error Occured: '.$sysmsg);
         } else {
             // Else commit the queries
             DB::commit();
 
 
-            $message = "<?xml version=\"1.0\"?>
-                        <COMMAND>             
-                        <TYPE>EXRCTRFREQ</TYPE>
-                        <DATE>" . $dt->toDateString() . "</DATE>
-                        <EXTNWCODE>ET</EXTNWCODE>
-                        <MSISDN>962586148</MSISDN>
-                        <PIN>3214</PIN>
-                        <LOGINID></LOGINID>
-                        <PASSWORD></PASSWORD>
-                        <EXTCODE></EXTCODE>
-                        <EXTREFNUM>NAZ000163917557</EXTREFNUM>
-                        <MSISDN2>" . $phone_number . "</MSISDN2>  
-                        <AMOUNT>" . $amount . "</AMOUNT>
-                        <LANGUAGE1>0</LANGUAGE1>
-                        <LANGUAGE2>1</LANGUAGE2>
-                        <SELECTOR>1</SELECTOR></COMMAND>";
-            if ($sales_type == 1) {
-                $message = "<?xml version=\"1.0\"?>
-                            <COMMAND>
-                            <TYPE>EXPPBREQ</TYPE>              
-                            <DATE>" . $dt->toDateString() . "</DATE>
-                            <MSISDN>962586148</MSISDN>
-                            <PIN>3214</PIN>
-                            <LOGINID></LOGINID>
-                            <PASSWORD></PASSWORD>
-                            <EXTCODE></EXTCODE>
-                            <EXTREFNUM>NAZ000163917557</EXTREFNUM>
-                            <MSISDN2>" . $phone_number . "</MSISDN2>  
-                            <AMOUNT>" . $amount . "</AMOUNT>         
-                            <LANGUAGE1>0</LANGUAGE1>
-                            <LANGUAGE2>1</LANGUAGE2>
-                            <SELECTOR>1</SELECTOR>
-                            </COMMAND> ";
-            }
-
-            $response = Http::withHeaders(['Content-Type' => 'text/xml; charset=utf-8'])->send('POST', 'https://10.208.254.131/pretups/C2SReceiver?LOGIN=nazret1&PASSWORD=70c0ad9d73cafc653ba10ee56ce10033&REQUEST_GATEWAY_CODE=nazret&REQUEST_GATEWAY_TYPE=EXTGW&SERVICE_PORT=190&SOURCE_TYPE=EXTGW', ['body' => $message, 'verify' => false]);
-            //dd($response->body());
-            $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
-            //dd($clean_xml);
-            $cxml = simplexml_load_string($clean_xml);
-            $json = json_encode($cxml);
-            $array = json_decode($json,TRUE);
-           dd($array);
             //dd(["myMessage"=>$cxml->MESSAGE[0],"txID"=>$cxml->TXNID[0]]);
-            return response()->json(['success' => 'true', 'xmlmessage' => $message, 'encrypted' => base64_encode($output)], 200);
-            return back()->with('success_message', $message);
+            //return response()->json(['success' => 'true', 'xmlmessage' => $message, 'encrypted' => base64_encode($output)], 200);
+            return back()->with('success_message', $sysmsg);
 
             //return response()->json(['success' => 'true', 'data' => ['yimulu_sales' => $cards, 'balance' => $agentBalance->balance]], 200);
         }
