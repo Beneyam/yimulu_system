@@ -527,7 +527,7 @@ class TransactionController extends Controller
         //dd($clean_xml);
         $cxml = simplexml_load_string($clean_xml);
 
-        dd($cxml->RECORD[0]->BALANCE);
+        dd($cxml->RECORD[0]->BALANCE[0]);
         $balance = System_balance::orderBy('id', 'desc')->lockForUpdate()->first();
         return isset($balance->balance) ? $balance->balance : 0;
     }
