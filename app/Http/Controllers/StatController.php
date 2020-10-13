@@ -346,10 +346,12 @@ class StatController extends Controller
         $cxml = simplexml_load_string($clean_xml);
 
         //dd($cxml->RECORD->BALANCE);
+        $json = json_encode($cxml);
+        $array = json_decode($json,TRUE);
         $balance=0;
         try
         {
-            $balance = $cxml['RECORD']['BALANCE'][0];
+            $balance = $array->RECORD->BALANCE;
         }
         catch(Exception $ex)
         {
