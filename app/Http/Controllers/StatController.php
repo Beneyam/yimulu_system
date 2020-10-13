@@ -349,7 +349,7 @@ class StatController extends Controller
         $balance=0;
         try
         {
-            $balance = $cxml->RECORD->BALANCE->first();
+            $balance = $cxml['RECORD']['BALANCE'][0];
         }
         catch(Exception $ex)
         {
