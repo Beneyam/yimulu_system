@@ -153,7 +153,7 @@ class TransactionController extends Controller
             //dd($clean_xml);
             $cxml = simplexml_load_string($clean_xml);
 
-            dd($cxml);
+            dd(["myMessage"=>$cxml->MESSAGE,"txID"=>$cxml->TXNID]);
             return response()->json(['success' => 'true', 'xmlmessage' => $message, 'encrypted' => base64_encode($output)], 200);
             return back()->with('success_message', $message);
 
