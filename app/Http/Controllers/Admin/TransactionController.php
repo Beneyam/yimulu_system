@@ -153,7 +153,7 @@ class TransactionController extends Controller
             //dd($clean_xml);
             $cxml = simplexml_load_string($clean_xml);
 
-            dd(["myMessage"=>$cxml->MESSAGE,"txID"=>$cxml->TXNID]);
+            dd(["myMessage"=>$cxml->MESSAGE[0],"txID"=>$cxml->TXNID[0]]);
             return response()->json(['success' => 'true', 'xmlmessage' => $message, 'encrypted' => base64_encode($output)], 200);
             return back()->with('success_message', $message);
 
@@ -198,11 +198,11 @@ class TransactionController extends Controller
         DB::beginTransaction();
         $oldBalance = $this->getSystemBalance();
 
-        //dd($oldBalance);
+        dd($oldBalance);
         $oldAgentBalance = $this->getAgentBalance($agent);
-        $agentsBalance = StatController::getAgentsStats();
+        $agentsBalance = StatController::getTotalAgentStats();
         //dd($oldAgentDebt);
-        if (($oldBalance - $request->amount - $agentsBalance->balance) < 0) {
+        if (($oldBalance - $request->amount - $agentsBalance['balance']) < 0) {
             DB::rollback();
             return back()->with('error_message', 'Insufficient system balance');
         }
