@@ -151,8 +151,15 @@
                  <p>Agents</p>
                </a>
              </li>
+             @can('manage-users')
+             <li class="nav-item">
+               <a href="{{route('admin.users.staffAgents')}}" class="nav-link">
+                 <i class="fas fa-users-cog nav-icon"></i>
+                 <p>Agent managers</p>
+               </a>
+             </li>
+             @endcan           </ul>
 
-           </ul>
          </li>
          @endcan
 
