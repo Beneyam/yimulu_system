@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Nared | EVD</title>
+  <title>Nazreth | Mobile</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -29,7 +29,7 @@
       <div class="card-body login-card-body bg-transparent">
         <div class="login-logo">
 
-          <a href="#"><img src="{{asset('dist/img/naredevd.png')}}" alt="Nared EVD System" class="responsive" style="opacity: .8;width:60%;height:auto;">
+          <a href="#"><img src="{{asset('dist/img/nareyimulu.png')}}" alt="Nazreth Mobile" class="responsive" style="opacity: .8;width:60%;height:auto;">
 
         </div>
         <form method="POST" action="{{ route('login') }}" id="quickForm">

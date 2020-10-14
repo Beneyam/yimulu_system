@@ -2,8 +2,8 @@
  <aside class="main-sidebar sidebar-light-danger elevation-4 accent-sucess">
    <!-- Brand Logo -->
    <a href="{{route('home')}}" class="brand-link accent-sucess" style="background:#1e621f">
-     <img src="{{asset('dist/img/nareyimulu.png')}}" alt="Nared Yimulu Logo" class="brand-image" style="opacity: .8; margin-left:-5px">
-     <span class="brand-text font-weight-light">Nared Yimulu System</span>
+     <img src="{{asset('dist/img/nareyimulu.png')}}" alt="NazrethMobile Yimulu Logo" class="brand-image" style="opacity: .8; margin-left:-5px">
+     <span class="brand-text font-weight-light">NazrethMobile Yimulu System</span>
    </a>
 
    <!-- Sidebar -->
