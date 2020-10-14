@@ -11,6 +11,12 @@
             <div class="card-header">
               <h3 class="card-title">Agent Lists</h3>
             </div>
+            </div>
+              <div class="col-sm-2">
+                <a class="btn btn-success" href="{{ route('admin.users.create') }}">Add new</a>
+              </div>
+              </div>
+            </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive">
               <table id="example1" class="example1 table table-striped table-bordered"  style="width:100%">
