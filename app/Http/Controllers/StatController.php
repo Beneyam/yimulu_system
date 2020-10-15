@@ -231,9 +231,9 @@ class StatController extends Controller
 
         $first_date = Carbon::now()->startOfDay();
         $last_date = Carbon::now();
-        return DB::table('sales_stats')
-            ->select(DB::raw('SUM(amount) as total') )->where('sales_stats.user_id', $user)
-            ->whereBetween('sales_stats.sales_date', [$first_date->toDateString(), $last_date->toDateString()])
+        return DB::table('yimulu_sales')
+            ->select(DB::raw('SUM(amount) as total') )->where('yimulu_sales.user_id', $user)
+            ->whereBetween('yimulu_sales.created_at', [$first_date->toDateString(), $last_date->toDateString()])
             ->first();
     }
     public static function getAgentTransactionsDetails($user)
@@ -413,9 +413,9 @@ class StatController extends Controller
         $fdate = new Carbon($date->firstOfYear());
 
         //dd([$fdate, $sdate]);
-        $result = DB::table('sales_stats')
+        $result = DB::table('yimulu_sales')
             ->select(DB::raw('SUM(amount) as amount'))
-            ->whereBetween('sales_stats.sales_date', [$fdate->toDateString(), $sdate->toDateString()])
+            ->whereBetween('yimulu_sales.created_at', [$fdate->toDateString(), $sdate->toDateString()])
             ->first();
 
         return isset($result->amount) ? $result->amount : 0;
@@ -427,9 +427,9 @@ class StatController extends Controller
         $fdate = new Carbon($date->firstOfMonth());
 
 
-        $result = DB::table('sales_stats')
+        $result = DB::table('yimulu_sales')
             ->select(DB::raw('SUM(amount) as amount'))
-            ->whereBetween('sales_stats.sales_date', [$fdate->toDateString(), $sdate->toDateString()])
+            ->whereBetween('yimulu_sales.created_at', [$fdate->toDateString(), $sdate->toDateString()])
             ->first();
 
         return isset($result->amount) ? $result->amount : 0;
@@ -438,9 +438,9 @@ class StatController extends Controller
     {
         $sdate = new Carbon($date);
         $fdate = new Carbon($date->startOfWeek());
-        $result = DB::table('sales_stats')
+        $result = DB::table('yimulu_sales')
             ->select(DB::raw('SUM(amount) as amount'))
-            ->whereBetween('sales_stats.sales_date', [$fdate->toDateString(), $sdate->toDateString()])
+            ->whereBetween('yimulu_sales.created_at', [$fdate->toDateString(), $sdate->toDateString()])
             ->first();
         return isset($result->amount) ? $result->amount : 0;
     }
@@ -796,31 +796,25 @@ class StatController extends Controller
     }
     public static function agent_sales_report($first, $last)
     {
-        //$now=Carbon::now();
-        //DB::enableQueryLog();
-
-        $result = DB::table('sales_stats')
-            ->join('users', 'sales_stats.user_id', '=', 'users.id')
-            ->select('users.name', 'users.phone_number', DB::raw('SUM(amount) as amount, sales_stats.sales_date as date'))
-            ->whereBetween('sales_stats.sales_date', [$first, $last])
-            ->groupBy('name')
-            ->groupBy('phone_number')
-            ->groupBy('date')
+        //dd($first);
+        $result = DB::table('yimulu_sales')
+            ->join('users', 'yimulu_sales.user_id', '=', 'users.id')
+            ->select('users.name', 'users.phone_number', DB::raw('yimulu_sales.amount, yimulu_sales.created_at as date, yimulu_sales.phone_number as zemed_phone'))
+            ->whereBetween('yimulu_sales.created_at', [$first, $last])
             ->orderBy('date', 'desc')
+            ->limit(2000)
             ->get();
+            //dd($result);
         return $result;
     }
     public static function single_agent_sales_report($first, $last, $agent)
     {
-        //$now=Carbon::now();
-        //DB::enableQueryLog();
-
-        $result = DB::table('sales_stats')
-            
-            ->select( DB::raw('SUM(sales_stats.amount) as amount, sales_stats.sales_date as date'))
-            ->where('sales_stats.user_id', $agent)
-            ->whereBetween('sales_stats.sales_date', [$first, $last]) 
-            ->groupBy('date')
+     
+        $result = DB::table('yimulu_sales')
+            ->join('users', 'yimulu_sales.user_id', '=', 'users.id')
+            ->select('users.name', 'users.phone_number', DB::raw('yimulu_sales.amount, yimulu_sales.created_at as date, yimulu_sales.phone_number as zemed_phone'))
+            ->where('yimulu_sales.user_id', $agent)
+            ->whereBetween('yimulu_sales.created_at', [$first, $last]) 
             ->orderBy('date', 'desc')
             ->get();
         return $result;
@@ -851,7 +845,7 @@ class StatController extends Controller
     {
         //$now=Carbon::now();
         //DB::enableQueryLog();
-        $result = DB::table('sales_stats')
+        $result = DB::table('yimulu_sales')
             ->select(DB::raw('SUM(amount) as amount,sales_date as date'))
             ->whereBetween('sales_date', [$first, $last])
             ->groupBy('date')
@@ -865,10 +859,10 @@ class StatController extends Controller
         //$now=Carbon::now();
         //DB::enableQueryLog();
 
-        $result = DB::table('sales_stats')
-            ->select(DB::raw('SUM(amount) as amount, sales_stats.sales_date as date'))
-            ->whereBetween('sales_stats.sales_date', [$first, $last])
-            ->where('sales_stats.user_id', $staff)
+        $result = DB::table('yimulu_sales')
+            ->select(DB::raw('SUM(amount) as amount, yimulu_sales.created_at as date'))
+            ->whereBetween('yimulu_sales.created_at', [$first, $last])
+            ->where('yimulu_sales.user_id', $staff)
             ->groupBy('date')
             ->orderBy('date', 'desc')
             ->get();
@@ -886,20 +880,20 @@ class StatController extends Controller
         $last_date = Carbon::now();
         $yesterday = Carbon::yesterday();
 
-        $ytd = DB::table('sales_stats')
+        $ytd = DB::table('yimulu_sales')
             ->select(DB::raw('SUM(amount) as total'))
-            ->whereBetween('sales_stats.sales_date', [$yd_date->toDateString(), $yesterday->toDateString()])
-            ->where('sales_stats.user_id', $agent)
+            ->whereBetween('yimulu_sales.created_at', [$yd_date->toDateString(), $yesterday->toDateString()])
+            ->where('yimulu_sales.user_id', $agent)
             ->first();
-        $mtd = DB::table('sales_stats')
+        $mtd = DB::table('yimulu_sales')
             ->select(DB::raw('SUM(amount) as total'))
-            ->whereBetween('sales_stats.sales_date', [$md_date->toDateString(), $yesterday->toDateString()])
-            ->where('sales_stats.user_id', $agent)
+            ->whereBetween('yimulu_sales.created_at', [$md_date->toDateString(), $yesterday->toDateString()])
+            ->where('yimulu_sales.user_id', $agent)
             ->first();
-        $wtd = DB::table('sales_stats')
+        $wtd = DB::table('yimulu_sales')
             ->select(DB::raw('SUM(amount) as total'))
-            ->whereBetween('sales_stats.sales_date', [$wd_date->toDateString(), $yesterday->toDateString()])
-            ->where('sales_stats.user_id', $agent)
+            ->whereBetween('yimulu_sales.created_at', [$wd_date->toDateString(), $yesterday->toDateString()])
+            ->where('yimulu_sales.user_id', $agent)
             ->first();
         $td = DB::table('yimulu_sales')
             ->select(DB::raw('SUM(amount) as total'))
@@ -1031,10 +1025,10 @@ class StatController extends Controller
 
     public static function getTopAgentStats()
     {
-        $yimulu_sales= DB::table('sales_stats')
-            ->join('users', 'users.id', '=', 'sales_stats.user_id')
+        $yimulu_sales= DB::table('yimulu_sales')
+            ->join('users', 'users.id', '=', 'yimulu_sales.user_id')
             ->select('users.name', 'users.name', DB::raw('SUM(amount) as amount'))
-            ->whereBetween('sales_stats.sales_date', [Carbon::now()->firstOfMonth()->toDateString(), Carbon::now()->toDateString()])
+            ->whereBetween('yimulu_sales.created_at', [Carbon::now()->firstOfMonth()->toDateString(), Carbon::now()->toDateString()])
             ->groupBy('users.name', 'users.phone_number')
             ->orderBy('amount', 'desc')
             ->limit(5)

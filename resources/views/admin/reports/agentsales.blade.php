@@ -48,14 +48,10 @@
           <div class="card-body table-responsive">
             <div class="row my-2 py-2 ">
               <div class="dropdown float-right">
-                <button class="btn 
-btn-primary
-
- dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Actions
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="table-actions">
-
                 </div>
               </div>
             </div>
@@ -66,7 +62,7 @@ btn-primary
                     <th>No</th>
                     <th>Agent Name</th>
                     <th>User Name</th>
-                   
+                    <th>Zemed's Phone</th>
                     <th>Amount</th>
                     <th>Date</th>
                   </tr>
@@ -88,7 +84,7 @@ btn-primary
 
                     <td>{{$sale->name}}</td>
                     <td>{{$sale->phone_number}}</td>
-                    
+                    <td>{{$sale->zemed_phone}}</td>
                     <td>{{number_format($sale->amount)}}</td>
                     <td>{{$sale->date}}</td>
                   </tr>
@@ -163,11 +159,14 @@ btn-primary
   });
 </script>
 
+
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.jqueryui.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js" integrity="sha512-y3o0Z5TJF1UsKjs/jS2CDkeHN538bWsftxO9nctODL5W40nyXIbs0Pgyu7//icrQY9m6475gLaVr39i/uh/nLA==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js" integrity="sha512-gYUM+7JjtBqPPGOgwgOZ+NwjGl+11/EP124oB+ihjlBpLgP5LTh7R/Iwcdy//cgH+QzrjspBiJI5iUegTNww3w==" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.min.js" integrity="sha512-VIF8OqBWob/wmCvrcQs27IrQWwgr3g+iA4QQ4hH/YeuYBIoAUluiwr/NX5WQAQgUaVx39hs6l05cEOIGEB+dmA==" crossorigin="anonymous"></script>
-
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
 
 
 
@@ -178,7 +177,8 @@ btn-primary
 @endsection
 
 @section('styles')
-<link href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.jqueryui.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.22/css/dataTables.jqueryui.min.css" rel="stylesheet">
 
 
 @endsection
