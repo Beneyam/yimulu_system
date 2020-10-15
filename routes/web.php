@@ -66,10 +66,11 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
     });
     Route::group(['middleware' => ['can:fill-balance']], function () {
         Route::post('/transactions/transfer_staff', 'TransactionController@transferStaff')->name('transactions.transfer_staff');
+        Route::post('/transactions/send', 'TransactionController@send')->name('transactions.send');
     });
     Route::group(['middleware' => ['can:manage-transaction']], function () {
         Route::post('/transactions/transfer', 'TransactionController@transfer')->name('transactions.transfer');
-        Route::post('/transactions/send', 'TransactionController@send')->name('transactions.send');
+        //Route::post('/transactions/send', 'TransactionController@send')->name('transactions.send');
      });
     Route::group(['middleware' => ['can:manage-report']], function () {
         Route::post('/reports/purchase', 'ReportController@purchase')->name('reports.purchase');
