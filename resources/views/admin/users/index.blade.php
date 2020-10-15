@@ -12,12 +12,7 @@
               <h3 class="card-title">Agent Lists</h3>
             </div>
             </div>
-              <div class="col-sm-2">
-                <a class="btn 
-btn-primary
-
-" href="{{ route('admin.users.create') }}">Add new</a>
-              </div>
+              
               </div>
             </div>
             <!-- /.card-header -->

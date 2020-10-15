@@ -50,7 +50,7 @@
 
           <div class="card-body">
             <div class="form-group">
-              <label for="exampleInputEmail1" class="text-dark">Phone Number</label>
+              <label for="exampleInputEmail1" class="text-dark">User Name</label>
               <input type="phone_number" name="phone_number" class="form-control {{ $errors->has('phone_number') ? 'is-invalid' : '' }}" id="exampleInputEmail1" placeholder="Enter Phone">
             </div>
             <div class="form-group">

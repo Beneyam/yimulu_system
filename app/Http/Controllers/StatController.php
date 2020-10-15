@@ -203,7 +203,7 @@ class StatController extends Controller
             'allsubagents' => $allsubagents,
             'subagentBalance' => $subagentBalance,
             'totalSubagentBalance' => $allSubagentBalance,
-            'sales' => $tot_sales->amount,
+            'sales' => $tot_sales->total,
             'subagentSales' => $subagentsSales,
             'allSubagentSales' => $allSubagentSales,
             'transaction' => $transaction,

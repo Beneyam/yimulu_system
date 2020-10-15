@@ -65,7 +65,7 @@ btn-primary
                   <tr>
                     <th>No</th>
                     <th>Agent Name</th>
-                    <th>Phone Number</th>
+                    <th>User Name</th>
                    
                     <th>Amount</th>
                     <th>Date</th>

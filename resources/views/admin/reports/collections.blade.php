@@ -66,7 +66,7 @@ btn-primary
                 <tr>
                   <th>No</th>
                   <th>Agent Name</th>
-                  <th>Phone Number</th>
+                  <th>User Name</th>
                   <th>Beginning Balance</th>
                   <th>refill</th>
                   <th>fill</th>

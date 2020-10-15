@@ -87,7 +87,7 @@
                   </div>
                   <div class="mx-1 my-auto  justify-content-begin">
                     <h4 class="text-md-right text-bold" id="subagentBalance">{{number_format($subagentBalance)}}</h4>
-                    <p>Direct agent Balance</p>
+                    <p>Direct Subagent's Balance</p>
                   </div>
                 </div>
                 <div class="bottom-divider"></div>
@@ -98,8 +98,8 @@
                     <span class="bg-transparent "><i class="fas fa-user-tie fa-3x"></i></span>
                   </div>
                   <div class="mx-1 my-auto  justify-content-begin">
-                    <h4 class="text-md-right text-bold" id="tsubagentbalance">{{number_format($totalSubagentBalance)}}</h4>
-                    <p>Total Subagent Balance</p>
+                    <h4 class="text-md-right text-bold" id="tsubagentbalance">{{number_format($totalSubagentBalance-$subagentBalance-$balance)}}</h4>
+                    <p>Indirect Subagent's Balance</p>
                   </div>
                 </div>
                 <div class="bottom-divider"></div>
@@ -112,8 +112,8 @@
                     <span class="bg-transparent "><i class="fas fa-money-check fa-3x"></i></span>
                   </div>
                   <div class="mx-1 my-auto  justify-content-begin">
-                    <h4 class="text-md-right text-bold" id="yimulu_sales">{{number_format($soldCardAmount)}}</h4>
-                    <p>Card Sales</p>
+                    <h4 class="text-md-right text-bold" id="yimulu_sales">{{number_format($sales)}}</h4>
+                    <p>Yimulu Sales</p>
                   </div>
                 </div>
                 <div class="bottom-divider"></div>
