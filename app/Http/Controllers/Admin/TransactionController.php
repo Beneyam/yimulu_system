@@ -525,16 +525,17 @@ class TransactionController extends Controller
 <EXTCODE></EXTCODE>
 <EXTREFNUM>NAZ000163917557</EXTREFNUM>
 </COMMAND>";
-        $response = Http::withHeaders(['Content-Type' => 'text/xml; charset=utf-8'])->send('POST', 'https://10.208.254.131/pretups/C2SReceiver?LOGIN=nazret1&PASSWORD=70c0ad9d73cafc653ba10ee56ce10033&REQUEST_GATEWAY_CODE=nazret&REQUEST_GATEWAY_TYPE=EXTGW&SERVICE_PORT=190&SOURCE_TYPE=EXTGW', ['body' => $message, 'verify' => false]);
         
-        $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
-        $cxml = simplexml_load_string($clean_xml);
-        //dd($clean_xml);
-        $json = json_encode($cxml);
-        $array = json_decode($json, true);
         $balance=0;
         try
         {
+            $response = Http::withHeaders(['Content-Type' => 'text/xml; charset=utf-8'])->send('POST', 'https://10.208.254.131/pretups/C2SReceiver?LOGIN=nazret1&PASSWORD=70c0ad9d73cafc653ba10ee56ce10033&REQUEST_GATEWAY_CODE=nazret&REQUEST_GATEWAY_TYPE=EXTGW&SERVICE_PORT=190&SOURCE_TYPE=EXTGW', ['body' => $message, 'verify' => false]);
+        
+            $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
+            $cxml = simplexml_load_string($clean_xml);
+            //dd($clean_xml);
+            $json = json_encode($cxml);
+            $array = json_decode($json, true);
             $balance = $array['RECORD']['BALANCE'];
         }
         catch(Exception $ex)
