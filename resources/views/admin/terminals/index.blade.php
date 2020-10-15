@@ -14,7 +14,10 @@
                 <h3 class="box-title">Terminals</h3>
               </div>
               <div class="col-sm-2">
-                <a class="btn btn-success" href="{{ route('admin.terminals.create') }}">Add new</a>
+                <a class="btn 
+btn-primary
+
+" href="{{ route('admin.terminals.create') }}">Add new</a>
               </div>
             </div>
           </div>

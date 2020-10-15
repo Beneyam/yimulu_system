@@ -123,11 +123,16 @@
 </section>
 @endsection
 @section('styles')
-<link rel="stylesheet" href="{{asset('/dist/css/selectize.bootstrap3.min.css')}}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha512-nATinx3+kN7dKuXEB0XLIpTd7j8QahdyJjE24jTJf4HASidUCFFN/TkSVn3CifGmWwfC2mO/VmFQ6hRn2IcAwg==" crossorigin="anonymous" />
+
+
 
 @endsection
 @section('javascript')
-<script src="{{asset('/dist/js/selectize.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha512-hgoywpb1bcTi1B5kKwogCTG4cvTzDmFCJZWjit4ZimDIgXu7Dwsreq8GOQjKVUxFwxCWkLcJN5EN0W0aOngs4g==" crossorigin="anonymous"></script>
+
+
+
 
 <script>
     $(document).ready(function() {

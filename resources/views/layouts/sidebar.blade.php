@@ -1,9 +1,9 @@
  <!-- Main Sidebar Container -->
- <aside class="main-sidebar sidebar-light-danger elevation-4 accent-sucess">
+ <aside class="main-sidebar sidebar-light-danger elevation-4 accent-sucess" >
    <!-- Brand Logo -->
-   <a href="{{route('home')}}" class="brand-link accent-sucess" style="background:#1e621f">
-     <img src="{{asset('dist/img/nareyimulu.png')}}" alt="NazrethMobile Yimulu Logo" class="brand-image" style="opacity: .8; margin-left:-5px">
-     <span class="brand-text font-weight-light">NazrethMobile Yimulu System</span>
+   <a href="{{route('home')}}" class="brand-link accent-sucess" style="background:#0f75bc">
+     <img src="{{asset('dist/img/lezemedlogo.jpg')}}" alt="NazrethMobile Yimulu Logo" class="brand-image" style="border-radius: 50%; margin-left:-0px;">
+     <span class="brand-text font-weight-light text-white">Yimulu System</span>
    </a>
 
    <!-- Sidebar -->

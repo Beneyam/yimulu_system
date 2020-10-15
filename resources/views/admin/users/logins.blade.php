@@ -15,7 +15,10 @@
             <div class="card-body table-responsive">
             <div class="row my-2 py-2 ">
               <div class="dropdown float-right">
-                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn 
+btn-primary
+
+ dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Actions
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="table-actions">
@@ -140,13 +143,17 @@
 <script src="{{asset('/dist/js/jszip.min.js')}}"></script>
 <script src="{{asset('/dist/js/pdfmake.min.js')}}"></script>
 <script src="{{asset('/dist/js/vfs_fonts.js')}}"></script>
-<script src="{{asset('/dist/js/buttons.html5.min.js')}}"></script>
+
+
+
+
 
 
 
 @endsection
 
 @section('styles')
-<link href="{{asset('/dist/css/jquery.dataTables.min.css')}}" rel="stylesheet">
-<link href="{{asset('/dist/css/jbuttons.dataTables.min.css')}}" rel="stylesheet">
+<link href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css" rel="stylesheet">
+
+
 @endsection

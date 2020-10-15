@@ -3,7 +3,10 @@
 <style>
   .right-divider {
     text-align: center;
-    border-right: 1px solid #1e621f;
+    border-right: 1px solid 
+#0f75bc
+
+;
   }
 
   .bottom-divider {
@@ -11,7 +14,10 @@
     padding: 10px;
     margin: auto;
     width: 60%;
-    border-bottom: 1px solid #1e621f;
+    border-bottom: 1px solid 
+#0f75bc
+
+;
   }
 
   .chartWithMarkerOverlay {
@@ -50,7 +56,7 @@
     <div class="row">
       <div class="col-12">
         <!-- Default box -->
-        <div class="card" style="background-color:#49b54b ">
+        <div class="card" style="background-color:#003366 ">
           <div class="card-header">
             <h1 class="card-title text-white">Today</h1>
 

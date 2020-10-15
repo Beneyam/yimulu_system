@@ -3,7 +3,10 @@
 <style>
   .right-divider {
     text-align: center;
-    border-right: 1px solid #1e621f;
+    border-right: 1px solid 
+#0f75bc
+
+;
   }
 
   .bottom-divider {
@@ -11,7 +14,10 @@
     padding: 10px;
     margin: auto;
     width: 60%;
-    border-bottom: 1px solid #1e621f;
+    border-bottom: 1px solid 
+#0f75bc
+
+;
   }
 
   .chartWithMarkerOverlay {
@@ -50,7 +56,7 @@
     <div class="row">
       <div class="col-12">
         <!-- Default box -->
-        <div class="card" style="background-color:#49b54b ">
+        <div class="card" style="background-color:#003366 ">
           <div class="card-header">
             <h1 class="card-title text-white">Today</h1>
 
@@ -182,7 +188,7 @@
 
           </div>
         </div>
-        <div class="card" style="background-color:#49b54b ">
+        <div class="card" style="background-color:#003366 ">
           <div class="card-header">
             <h1 class="card-title text-white">Sales</h1>
             <div class="card-tools">
@@ -205,7 +211,10 @@
                   @php
                   if($comparisons['DTD']>0){
                   @endphp
-                  <span class="font-weight-bolder" style="font-size:25px; color:#1e621f">
+                  <span class="font-weight-bolder" style="font-size:25px; color:
+#0f75bc
+
+">
                     <i class="fas fa-caret-up"></i>
                     @php
                     }
@@ -236,7 +245,10 @@
                   @php
                   if($comparisons['WTW']>0){
                   @endphp
-                  <span class="font-weight-bolder" style="font-size:25px; color:#1e621f">
+                  <span class="font-weight-bolder" style="font-size:25px; color:
+#0f75bc
+
+">
                     <i class="fas fa-caret-up"></i>
                     @php
                     }
@@ -266,7 +278,10 @@
                   @php
                   if($comparisons['MTM']>0){
                   @endphp
-                  <span class="font-weight-bolder" style="font-size:25px; color:#1e621f">
+                  <span class="font-weight-bolder" style="font-size:25px; color:
+#0f75bc
+
+">
                     <i class="fas fa-caret-up"></i>
                     @php
                     }
@@ -296,7 +311,10 @@
                   @php
                   if($comparisons['YTY']>0){
                   @endphp
-                  <span class="font-weight-bolder" style="font-size:25px; color:#1e621f">
+                  <span class="font-weight-bolder" style="font-size:25px; color:
+#0f75bc
+
+">
                     <i class="fas fa-caret-up"></i>
                     @php
                     }
@@ -324,7 +342,7 @@
           </div>
           <!-- /.card-footer -->
         </div>
-        <div class="card" style="background-color:#49b54b ">
+        <div class="card" style="background-color:#003366 ">
           <div class="card-header">
             <h1 class="card-title text-white">Purchases</h1>
             <div class="card-tools">
@@ -342,7 +360,7 @@
 
           </div>
         </div>
-        <div class="card" style="background-color:#49b54b ">
+        <div class="card" style="background-color:#003366 ">
           <div class="card-header">
             <h1 class="card-title text-white">Top agents</h1>
             <div class="card-tools">
@@ -361,7 +379,7 @@
             </div>
           </div>
         </div>
-        <div class="card" id="card-stats" style="background-color:#49b54b ">
+        <div class="card" id="card-stats" style="background-color:#003366 ">
           <div class="card-header">
             <h1 class="card-title text-white">System Card Stats</h1>
             <div class="card-tools">
@@ -701,7 +719,10 @@
         });
         var cc = 0;
         var gg = ['', '', '', '', ''];
-        var col = ['#1e621f ', '#afb42b', '#fdd835', '#ffc107', '#ff7043'];
+        var col = ['
+#0f75bc
+
+ ', '#afb42b', '#fdd835', '#ffc107', '#ff7043'];
         $.each(sales, function(index, value) {
           qdata.addRow([gg[cc], parseFloat(value['amount']), col[cc], value['name']]);
           cc++;
@@ -766,7 +787,10 @@
         });
         var cc = 0;
         var gg = [' ', ' ', ' ', ' ', ' '];
-        var col = ['#1e621f ', '#afb42b', '#fdd835', '#ffc107', '#ff7043'];
+        var col = ['
+#0f75bc
+
+ ', '#afb42b', '#fdd835', '#ffc107', '#ff7043'];
 
         $.each(first, function(index, value) {
           fdata.addRow([gg[cc], parseFloat(value['amount']), col[cc], value['name']]);

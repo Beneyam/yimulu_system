@@ -73,35 +73,56 @@
               </li>
             </ul>
             @can('manage-transaction')
-            <a class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-fill">
+            <a class="btn 
+btn-primary
+
+ btn-block" data-toggle="modal" data-target="#modal-fill">
               <b>Fill Balance</b>
             </a>
-            <a class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-record-deposits">
+            <a class="btn 
+btn-primary
+
+ btn-block" data-toggle="modal" data-target="#modal-record-deposits">
               <b>Record Deposits</b>
             </a>
             @endcan
 
             @can('staff-view')
-            <a class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-fill2">
+            <a class="btn 
+btn-primary
+
+ btn-block" data-toggle="modal" data-target="#modal-fill2">
               <b>Fill Balance</b>
             </a>
             @endcan
             @can('manage-others')
-            <a class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-edit">
+            <a class="btn 
+btn-primary
+
+ btn-block" data-toggle="modal" data-target="#modal-edit">
               <b>Edit</b>
             </a>
             @endcan
             @can('edit-users')
-            <a class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-change-parent">
+            <a class="btn 
+btn-primary
+
+ btn-block" data-toggle="modal" data-target="#modal-change-parent">
               <b>Change Parent</b>
             </a>
 
-            <a class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-show-otp">
+            <a class="btn 
+btn-primary
+
+ btn-block" data-toggle="modal" data-target="#modal-show-otp">
               <b>Show OTP Code</b>
             </a>
             @endcan
             @can('manage-system')
-            <a class="btn btn-success btn-block" data-toggle="modal" data-target="#modal-change-password">
+            <a class="btn 
+btn-primary
+
+ btn-block" data-toggle="modal" data-target="#modal-change-password">
               <b>Change Password</b>
             </a>
             @endcan
@@ -300,7 +321,10 @@
               <!-- /.card-body -->
 
               <div class="card-footer">
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="submit" class="btn 
+btn-primary
+
+">Submit</button>
               </div>
             </form>
           </div>
@@ -347,7 +371,10 @@
               <!-- /.card-body -->
 
               <div class="card-footer">
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="submit" class="btn 
+btn-primary
+
+">Submit</button>
               </div>
             </form>
           </div>
@@ -389,7 +416,10 @@
 
                 <input type="checkbox" id="multi_login" name="multi_login" value='1' {{($user->multi_login)?"checked":""}}>
               </div>
-              <button type="submit" class="btn btn-success">Submit</button>
+              <button type="submit" class="btn 
+btn-primary
+
+">Submit</button>
 
             </form>
           </div>
@@ -569,7 +599,10 @@
               <!-- /.card-body -->
 
 
-              <button type="submit" class="btn btn-success">Submit</button>
+              <button type="submit" class="btn 
+btn-primary
+
+">Submit</button>
           </div>
         </form>
       </div>
@@ -606,7 +639,10 @@
               <!-- /.card-body -->
 
               <div class="card-footer">
-                <button type="submit" class="btn btn-success" onclick="return Validate2()">Submit</button>
+                <button type="submit" class="btn 
+btn-primary
+
+" onclick="return Validate2()">Submit</button>
               </div>
             </form>
           </div>
@@ -678,7 +714,10 @@
               <!-- /.card-body -->
 
               <div class="card-footer">
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="submit" class="btn 
+btn-primary
+
+">Submit</button>
               </div>
             </form>
           </div>
@@ -854,11 +893,16 @@
 <!-- /.content -->
 @endsection
 @section('styles')
-<link rel="stylesheet" href="{{asset('/dist/css/selectize.bootstrap3.min.css')}}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha512-nATinx3+kN7dKuXEB0XLIpTd7j8QahdyJjE24jTJf4HASidUCFFN/TkSVn3CifGmWwfC2mO/VmFQ6hRn2IcAwg==" crossorigin="anonymous" />
+
+
 
 @endsection
 @section('javascript')
-<script src="{{asset('/dist/js/selectize.min.js')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha512-hgoywpb1bcTi1B5kKwogCTG4cvTzDmFCJZWjit4ZimDIgXu7Dwsreq8GOQjKVUxFwxCWkLcJN5EN0W0aOngs4g==" crossorigin="anonymous"></script>
+
+
+
 
 <script>
   $(document).ready(function() {

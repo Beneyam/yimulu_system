@@ -47,7 +47,10 @@
               </div>
               
               <div class="col-md-6">
-                <input type="submit" name="submit" class="btn btn-success submitBtn float-right" value="Record Purchase">
+                <input type="submit" name="submit" class="btn 
+btn-primary
+
+ submitBtn float-right" value="Record Purchase">
               </div>
             </form>
             
@@ -73,16 +76,19 @@
 @section('javascript')
 
 
-<script src="{{asset('/dist/js/jquery-3.3.1.js')}}"></script>
-<script src="{{asset('/dist/js/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('/dist/js/dataTables.buttons.min.js')}}"></script>
-<script src="{{asset('/dist/js/jszip.min.js')}}"></script>
-<script src="{{asset('/dist/js/pdfmake.min.js')}}"></script>
-<script src="{{asset('/dist/js/vfs_fonts.js')}}"></script>
-<script src="{{asset('/dist/js/buttons.html5.min.js')}}"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js" integrity="sha512-y3o0Z5TJF1UsKjs/jS2CDkeHN538bWsftxO9nctODL5W40nyXIbs0Pgyu7//icrQY9m6475gLaVr39i/uh/nLA==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js" integrity="sha512-gYUM+7JjtBqPPGOgwgOZ+NwjGl+11/EP124oB+ihjlBpLgP5LTh7R/Iwcdy//cgH+QzrjspBiJI5iUegTNww3w==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.min.js" integrity="sha512-VIF8OqBWob/wmCvrcQs27IrQWwgr3g+iA4QQ4hH/YeuYBIoAUluiwr/NX5WQAQgUaVx39hs6l05cEOIGEB+dmA==" crossorigin="anonymous"></script>
+
+
+
+
+
 @endsection
 
 @section('styles')
-<link href="{{asset('/dist/css/jquery.dataTables.min.css')}}" rel="stylesheet">
-<link href="{{asset('/dist/css/jbuttons.dataTables.min.css')}}" rel="stylesheet">
+<link href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css" rel="stylesheet">
+
+
 @endsection

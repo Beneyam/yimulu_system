@@ -3,7 +3,10 @@
 <style>
   .right-divider {
     text-align: center;
-    border-right: 1px solid #1e621f;
+    border-right: 1px solid 
+#0f75bc
+
+;
   }
 
   .bottom-divider {
@@ -11,7 +14,10 @@
     padding: 10px;
     margin: auto;
     width: 60%;
-    border-bottom: 1px solid #1e621f;
+    border-bottom: 1px solid 
+#0f75bc
+
+;
   }
 
   .chartWithMarkerOverlay {
@@ -50,7 +56,7 @@
     <div class="row">
       <div class="col-12">
         <!-- Default box -->
-        <div class="card" style="background-color:#49b54b ">
+        <div class="card" style="background-color:#003366 ">
           <div class="card-header">
             <h1 class="card-title text-white">Today</h1>
 
@@ -143,7 +149,7 @@
           </div>
         </div>
 
-        <div class="card" style="background-color:#49b54b ">
+        <div class="card" style="background-color:#003366 ">
           <div class="card-header">
             <h1 class="card-title text-white">Top agents</h1>
             <div class="card-tools">
@@ -171,9 +177,9 @@
   </div>
 
   <div id="mybutton" style=" position: fixed;
-  bottom: 20px;
+  bottom: 120px;
   right: 50px;">
-    <a class="btn-floating btn-outline" data-toggle="modal" data-target="#send-money"><i class="fas fa-paper-plane fa-3x btn-primary"></i></a>
+    <a class="btn-floating" data-toggle="modal" data-target="#send-money"><i class="fas fa-share-alt fa-3x btn-outline text-white"></i></a>
   </div>
   <div class="modal fade" id="send-money">
     <div class="modal-dialog">
@@ -213,7 +219,10 @@
               <!-- /.card-body -->
 
               <div class="card-footer">
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="submit" class="btn 
+btn-primary
+
+">Submit</button>
               </div>
             </form>
           </div>

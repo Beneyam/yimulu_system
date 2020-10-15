@@ -13,7 +13,7 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="{{asset('/dist/css/ionicons.min.css')}}">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('/dist/css/adminlte.min.css')}}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/css/adminlte.min.css" integrity="sha512-rVZC4rf0Piwtw/LsgwXxKXzWq3L0P6atiQKBNuXYRbg2FoRbSTIY0k2DxuJcs7dk4e/ShtMzglHKBOJxW8EQyQ==" crossorigin="anonymous" />
   <!-- Google Font: Source Sans Pro -->
   <link href="{{asset('/dist/css/fonts.css')}}" rel="stylesheet">
 
@@ -51,14 +51,14 @@
   <!-- Bootstrap 4 -->
   <script src="{{asset('/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
   <!-- AdminLTE App -->
-  <script src="{{asset('/dist/js/adminlte.min.js')}}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.0.5/js/adminlte.min.js" integrity="sha512-++c7zGcm18AhH83pOIETVReg0dr1Yn8XTRw+0bWSIWAVCAwz1s2PwnSj4z/OOyKlwSXc4RLg3nnjR22q0dhEyA==" crossorigin="anonymous"></script>
   <!-- AdminLTE for demo purposes -->
   <script src="{{asset('/dist/js/demo.js')}}"></script>
   <script src="{{asset('/dist/js/sweetalert2@9.js')}}"></script>
   <script src="{{asset('/dist/js/fontawesome.all.js')}}"></script>
-  <script src="{{asset('/dist/js/jquery-3.3.1.js')}}"></script>
-  <script src="{{asset('/dist/js/jquery.dataTables.min.js')}}"></script>
-  <script src="{{asset('/dist/js/dataTables.bootstrap4.min.js')}}"></script>
+
+
+
   <script src="{{asset('/dist/js/gchart.js')}}"></script>
   <script type="text/javascript">
     //for busy

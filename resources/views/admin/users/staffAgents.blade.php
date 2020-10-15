@@ -14,7 +14,10 @@
               <h3 class="card-title"> Staff Agent Lists</h3>
             </div>
               <div class="col-sm-2">
-                <a class="btn btn-success" href="{{ route('admin.users.create') }}">Add new</a>
+                <a class="btn 
+btn-primary
+
+" href="{{ route('admin.users.create') }}">Add new</a>
               </div>
               </div>
             </div>

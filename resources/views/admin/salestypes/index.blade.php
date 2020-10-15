@@ -1,6 +1,8 @@
 @extends('admin.salestypes.base')
 @section('styles')
-<link href="{{asset('/dist/css/jquery.dataTables.min.css')}}" rel="stylesheet">
+
+
+
 @endsection
 @section('main-content')
 
@@ -17,7 +19,10 @@
                 <h3 class="box-title">Sales Types</h3>
               </div>
               <div class="col-sm-2">
-                <a class="btn btn-success" href="{{ route('admin.salestypes.create') }}">Add new</a>
+                <a class="btn 
+btn-primary
+
+" href="{{ route('admin.salestypes.create') }}">Add new</a>
               </div>
             </div>
           </div>
@@ -75,9 +80,9 @@
 @endsection
 @section('javascript')
 
-  <script src="{{asset('/dist/js/jquery-3.3.1.js')}}"></script>
-  <script src="{{asset('/dist/js/jquery.dataTables.min.js')}}"></script>
-  <script src="{{asset('/dist/js/dataTables.bootstrap4.min.js')}}"></script>
+
+
+
   <script>
     $(document).ready(function() {
         $('#example').DataTable();

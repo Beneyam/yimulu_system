@@ -14,7 +14,10 @@
                 <h3 class="box-title">deposits</h3>
               </div>
               <div class="col-sm-3">
-                <a class="btn btn-success" href="{{ route('admin.deposits.create') }}">Record My Deposits</a>
+                <a class="btn 
+btn-primary
+
+" href="{{ route('admin.deposits.create') }}">Record My Deposits</a>
               </div>
             </div>
           </div>

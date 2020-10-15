@@ -1,5 +1,5 @@
  <!-- Navbar -->
- <nav class="main-header navbar navbar-expand navbar-light" style="background: #1e621f ">
+ <nav class="main-header navbar navbar-expand navbar-light" style="background: #0f75bc">
    <!-- Left navbar links -->
    <ul class="navbar-nav text-white">
      <li class="nav-item">
@@ -82,7 +82,10 @@
               <!-- /.card-body -->
 
               <div class="card-footer">
-                <button type="submit" class="btn btn-success" onclick="return Validate()">Submit</button>
+                <button type="submit" class="btn 
+btn-primary
+
+" onclick="return Validate()">Submit</button>
               </div>
             </form>
           </div>
