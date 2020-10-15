@@ -197,8 +197,8 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="phone">User Name</label>
-                  <input type="number" class="form-control" id="phone" name="phone_number">
+                  <label for="phone">Zemed's Phone</label>
+                  <input type="number" class="form-control" id="phone" name="phone_number" placeholder="09xxxxxxxx">
                 </div>
                 <div class="form-group">
                   <label for="amount">Amount</label>

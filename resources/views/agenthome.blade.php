@@ -191,8 +191,8 @@
   </div>
 
 
-  <div id="mybutton" style=" position: fixed; bottom: 120px;   right: 50px;">
-    <a class="btn-floating" data-toggle="modal" data-target="#send-money"><i class="fas fa-share-alt fa-3x btn-outline text-white"></i></a>
+  <div id="mybutton" style=" position: fixed; bottom: 70px;   right: 50px;">
+    <a class="btn-floating" data-toggle="modal" data-target="#send-money"><i class="fas fa-share-alt fa-3x btn-outline" style="color:#003366"></i></a>
   </div>
   <div class="modal fade" id="send-money">
     <div class="modal-dialog">
@@ -218,8 +218,8 @@
                   </select>
                 </div>
                 <div class="form-group">
-                  <label for="phone">User Name</label>
-                  <input type="number" class="form-control" id="phone" name="phone_number">
+                  <label for="phone">Zemed's Phone</label>
+                  <input type="number" class="form-control" id="phone" name="phone_number" placeholder="09xxxxxxxx">
                 </div>
                 <div class="form-group">
                   <label for="amount">Amount</label>
