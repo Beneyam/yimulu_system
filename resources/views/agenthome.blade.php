@@ -191,8 +191,17 @@
   </div>
 
 
-  <div id="mybutton" style=" position: fixed; bottom: 70px;   right: 50px;">
-    <a class="btn-floating" data-toggle="modal" data-target="#send-money"><i class="fas fa-share-alt fa-3x btn-outline" style="color:#003366"></i></a>
+  <div id="mybutton" style=" position: fixed; bottom: 120px;   right: 50px;">
+    <div class="info-box" data-toggle="modal" data-target="#send-money">
+      <span class="info-box-icon" style="background-color:#003366 "><i class="fas fa-share-alt fa-2x btn-outline text-white"></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text">Send Yimulu</span>
+        <span class="info-box-number">1 USD= <span id="exrate"></span> ETB</span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+    
   </div>
   <div class="modal fade" id="send-money">
     <div class="modal-dialog">
@@ -223,8 +232,9 @@
                 </div>
                 <div class="form-group">
                   <label for="amount">Amount</label>
-                  <input class="form-control" name="amount" type="number" id="amount">
-                </div>
+                  <input class="form-control" name="amount" type="number" id="amount" onkeyup="myFunction3(this.value)" placeholder="in Birr">
+                  <p style="color:crimson" ><span id="converted">0.00</span> USD</p>
+                   </div>
 
 
 
@@ -244,4 +254,42 @@
     <!-- /.modal-dialog -->
   </div>
 </section>
+@endsection
+@section('javascript')
+<script>
+   var exrate=0;
+  $(document).ready(function() {
+
+  
+    var delayInMilliseconds = 100; //1 second
+
+     
+      $.ajax({
+        type: 'GET',
+        url: "https://free.currconv.com/api/v7/convert?q=USD_ETB&compact=ultra&apiKey=a9cb1c997d96f61b42b5",
+        timeout: 90000,
+        contentType: "text/plain",
+        dataType: 'json',
+        success: function(json) {
+          // console.log(json);
+
+          $('#exrate').text(new Intl.NumberFormat('en', {
+            style: 'decimal',
+
+          }).format(parseFloat(json.USD_ETB).toFixed(2)));
+          exrate=json.USD_ETB;
+         
+        }
+      });
+
+
+  });
+  function myFunction3(val) {
+    var amount = document.getElementById("amount").value;
+    console.log((amount/exrate).toFixed(2));
+    $('#converted').text((amount/exrate).toFixed(2));
+  }
+
+</script>
+
 @endsection
