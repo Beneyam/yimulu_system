@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Conversion;
 use App\Activation;
 use Illuminate\Http\Request;
 use App\User;
@@ -193,7 +193,7 @@ class StatController extends Controller
         $tot_sales=StatController::getAgentTotalSales($user->id);
         $sold_card_amount = 0;
         $transaction = StatController::getAgentTransactions($user->id);
-
+        $conversions=Conversion::limit(5)->get();
         return [
 
             'user' => $user,
@@ -208,7 +208,8 @@ class StatController extends Controller
             'allSubagentSales' => $allSubagentSales,
             'transaction' => $transaction,
             'activeAgents' => $active_agent_count,
-            'newAgents' => $newAgents
+            'newAgents' => $newAgents,
+            'conversions'=>$conversions
 
         ];
     }

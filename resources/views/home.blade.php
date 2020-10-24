@@ -142,7 +142,31 @@
 
           </div>
         </div>
+        <div class="card" style="background-color:#003366 ">
+          <div class="card-body">
+            <div class="row text-white">
 
+              <div class="col right-divider col-lg-2 col-md-2 col-6 mt-2">
+                <div class="mx-1 my-auto  justify-content-begin">
+                  <h5 class="description-header">Rates</h5>
+                  <span class="description-text">Equivalence in Birr</span>
+                </div>
+                <!-- /.description-block -->
+              </div>
+              <!-- /.col -->
+              @foreach($conversions as $conversion)
+              <div class="col right-divider col-lg-2 col-md-2 col-6 mt-2">
+                <div class="mx-1 my-auto  justify-content-begin">
+                  <h5 class="description-header">${{$conversion->dollar}}</h5>
+                  <span class="description-text">{{$conversion->birr}} Birr</span>
+                </div>
+                <!-- /.description-block -->
+              </div>
+              <!-- /.col -->
+              @endforeach
+            </div>
+          </div>
+        </div>
         <div class="card" style="background-color:#003366 ">
           <div class="card-header">
             <h1 class="card-title text-white">Top agents</h1>
@@ -176,10 +200,9 @@
 
       <div class="info-box-content">
         <span class="info-box-text">Send Yimulu</span>
-        <span class="info-box-number">1 USD= <span id="exrate"></span> ETB</span>
       </div>
       <!-- /.info-box-content -->
-    </div>    
+    </div>
   </div>
   <div class="modal fade" id="send-money">
     <div class="modal-dialog">
@@ -210,8 +233,7 @@
                 </div>
                 <div class="form-group">
                   <label for="amount">Amount</label>
-                  <input class="form-control" name="amount" type="number" id="amount" onkeyup="myFunction3(this.value)" placeholder="in Birr">
-                  <p style="color:crimson" ><span id="converted">0.00</span> USD</p>
+                  <input class="form-control" name="amount" type="number" id="amount" placeholder="in Birr">
                 </div>
 
 
@@ -235,7 +257,7 @@
 @endsection
 @section('javascript')
 <script>
-   var exrate=0;
+  var exrate = 0;
   $(document).ready(function() {
 
     $.ajax({
@@ -288,25 +310,8 @@
         }
       });
 
-     
-      $.ajax({
-        type: 'GET',
-        url: "https://free.currconv.com/api/v7/convert?q=USD_ETB&compact=ultra&apiKey=a9cb1c997d96f61b42b5",
-        timeout: 90000,
-        contentType: "text/plain",
-        dataType: 'json',
-        success: function(json) {
-          // console.log(json);
 
-          $('#exrate').text(new Intl.NumberFormat('en', {
-            style: 'decimal',
-
-          }).format(parseFloat(json.USD_ETB).toFixed(2)));
-          exrate=json.USD_ETB;
-         
-        }
-      });
-
+      
       $.ajax({
         type: 'GET',
         url: "{{route('webapi123bb.userstat')}}",
@@ -367,12 +372,12 @@
     });
 
   });
+
   function myFunction3(val) {
     var amount = document.getElementById("amount").value;
-    console.log((amount/exrate).toFixed(2));
-    $('#converted').text((amount/exrate).toFixed(2));
+    console.log((amount / exrate).toFixed(2));
+    $('#converted').text((amount / exrate).toFixed(2));
   }
-
 </script>
 
 @endsection

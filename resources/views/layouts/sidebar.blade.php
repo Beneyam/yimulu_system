@@ -180,6 +180,12 @@
                  <p>Banks</p>
                </a>
              </li>
+             <li class="nav-item">
+               <a href="{{route('admin.conversions.index')}}" class="nav-link">
+                 <i class="fas fa-money-check-alt nav-icon"></i>
+                 <p>Conversions</p>
+               </a>
+             </li>
              @endcan
              <li class="nav-item">
                <a href="{{route('admin.deposits.index')}}" class="nav-link">

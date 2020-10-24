@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Conversion;
 use Illuminate\Http\Request;
 use App\System_balance;
 use App\yimulu_sales;
@@ -42,11 +43,13 @@ class HomeController extends Controller
             //  $card_stats=StatController::getRemainingCardStats();
             //return view('home', ['system_balance'=>$system_balance,'system_cards'=>$system_cards,'agentsBalance'=>$agentsStats['balance'],'agentsDebt'=>$agentsStats['debt'],'yimulu_sales'=>$sales,'txs'=>$txs,'user_stat'=>$user_stats,'comparisons'=>$comparisons, 'card_stats'=>$card_stats, 'collections'=>$collections]);
             // Artisan::queue('send:message');
-            return view('home');
+            $conversions=Conversion::limit(5)->get();
+            return view('home',['conversions'=>$conversions]);
         }
         elseif($agent->hasRole('staff-agent'))
         {
             $stat= StatController::GetAgentStatDashboard($agent);
+           
             return view('agenthome',$stat);
         }
     }

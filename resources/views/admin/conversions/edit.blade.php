@@ -1,5 +1,5 @@
 
-@extends('admin.terminals.base')
+@extends('admin.conversions.base')
 @section('main-content')
 
 <!-- Main content -->
@@ -10,37 +10,37 @@
             <div class="col-lg-9 col-sm-10">
             <div class="card card-warning">
             <div class="card-header">
-              <h3 class="card-title">Edit Terminal: {{$terminal->name}}</h3>
+              <h3 class="card-title">Edit Conversion: ${{$conversion->dollar}}</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <form action="{{route('admin.terminals.update',$terminal)}}" method="POST">
+              <form action="{{route('admin.conversions.update',$conversion)}}" method="POST">
                 @csrf
                 {{method_field('PUT')}}
                 
-                <div class="form-group{{ $errors->has('brand') ? ' has-error' : '' }}">
+                <div class="form-group{{ $errors->has('dollar') ? ' has-error' : '' }}">
 
-                                <label for="brand" class="col-md-4 control-label">Brand Name</label>
+                                <label for="dollar" class="col-md-4 control-label">Dollar Name</label>
 
                                 <div class="col-md-6">
-                                    <input type="text" id="brand" class="form-control" name="brand" value="{{$terminal->name}}">
-                                    @if ($errors->has('brand'))
+                                    <input type="text" id="dollar" class="form-control" name="dollar" value="{{$conversion->dollar}}">
+                                    @if ($errors->has('dollar'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('brand') }}</strong>
+                                        <strong>{{ $errors->first('dollar') }}</strong>
                                     </span>
                                     @endif
                                
                                 </div>
                                
                             </div>
-                            <div class="form-group{{ $errors->has('serial_number') ? ' has-error' : '' }}">
-                                <label for="serial_number" class="col-md-4 control-label">Serial Number</label>
+                            <div class="form-group{{ $errors->has('birr') ? ' has-error' : '' }}">
+                                <label for="birr" class="col-md-4 control-label">Birr</label>
 
                                 <div class="col-md-6">
-                                    <input type="text" id="serial_number" class="form-control" name="serial_number" value="{{$terminal->serial_number}}">
-                                    @if ($errors->has('serial_number'))
+                                    <input type="text" id="birr" class="form-control" name="birr" value="{{$conversion->birr}}">
+                                    @if ($errors->has('birr'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('serial_number') }}</strong>
+                                        <strong>{{ $errors->first('birr') }}</strong>
                                     </span>
                                     @endif
                                

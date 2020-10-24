@@ -1,4 +1,4 @@
-@extends('admin.terminals.base')
+@extends('admin.conversions.base')
 @section('main-content')
 
 <!-- Main content -->
@@ -11,13 +11,10 @@
 
             <div class="row">
               <div class="col-sm-10">
-                <h3 class="box-title">Terminals</h3>
+                <h3 class="box-title">Conversions</h3>
               </div>
               <div class="col-sm-2">
-                <a class="btn 
-btn-primary
-
-" href="{{ route('admin.terminals.create') }}">Add new</a>
+                <a class="btn btn-primary" href="{{ route('admin.conversions.create') }}">Add new</a>
               </div>
             </div>
           </div>
@@ -27,8 +24,8 @@ btn-primary
               <thead>
                 <tr>
                   <th>No</th>
-                  <th>Brand</th>
-                  <th>Serial number</th>
+                  <th>Dollar</th>
+                  <th>Birr</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -38,19 +35,19 @@ btn-primary
                 @php
                 $i=1;
                 @endphp
-                @foreach($terminals as $terminal)
+                @foreach($conversions as $conversion)
                 <tr>
                   <td>{{$i}}</td>
                   @php
                   $i++;
                   @endphp
                   
-                  <td>{{$terminal->brand}}</td>
-                  <td>{{$terminal->serial_number}}</td>
+                  <td>{{$conversion->dollar}}</td>
+                  <td>{{$conversion->birr}}</td>
                  
-                  <td>{{$terminal->terminal_status?'Active':'Inactive'}}</td>
+                  <td>{{$conversion->terminal_status?'Active':'Inactive'}}</td>
                   <td>
-                    <a href="{{ route('admin.terminals.edit', ['terminal' => $terminal->id]) }}" style="width:100%" class="btn btn-primary"><i class="mdi mdi-cloud-download"></i>Edit</a>
+                    <a href="{{ route('admin.conversions.edit', ['conversion' => $conversion->id]) }}" style="width:100%" class="btn btn-primary"><i class="mdi mdi-cloud-download"></i>Edit</a>
                   </td>
                 </tr>
                 @endforeach
@@ -59,6 +56,7 @@ btn-primary
               
             </table>
           </div>
+          <h5>Note: only the first five conversions will be visible at home page</h5>
           <!-- /.card-body -->
         </div>
         <!-- /.card -->

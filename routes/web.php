@@ -59,10 +59,9 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
     });
     Route::group(['middleware' => ['can:manage-system']], function () {
         Route::resource('/banks', 'BankController', ['except' => ['show']]);
-        Route::resource('/terminals', 'TerminalController', ['except' => ['show']]);
+        Route::resource('/conversions', 'ConversionController');
         Route::resource('/userstatuses', 'UserStatusController', ['except' => ['show']]);
-        Route::resource('/salestypes', 'SalesTypeController', ['except' => ['show']]);
-       
+        Route::resource('/salestypes', 'SalesTypeController', ['except' => ['show']]);     
     });
     Route::group(['middleware' => ['can:fill-balance']], function () {
         Route::post('/transactions/transfer_staff', 'TransactionController@transferStaff')->name('transactions.transfer_staff');
@@ -103,7 +102,6 @@ Route::namespace('Admin')->prefix('admin')->name('admin.')->group(function () {
         Route::post('/deposits/cancel', 'DepositController@cancel')->name('deposits.cancel');
     });
     Route::group(['middleware' => ['can:manage-others']], function () {
-        Route::post('/others/assign-terminals', 'UserController@assignTerminal')->name('others.assign-terminals');
         Route::post('/others/assign-papers', 'UserController@assignPaper')->name('others.assign-papers');
 
         Route::post('/reports/agentcollections', 'ReportController@agentCollections')->name('reports.agentcollections');
