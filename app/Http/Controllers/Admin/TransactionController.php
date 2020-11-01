@@ -24,6 +24,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\StatController;
 use Exception;
+use App\Conversion;
 
 class TransactionController extends Controller
 {
@@ -52,10 +53,11 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function send_yimulu()
     {
         //
-        return view('admin.transactions.create');
+        $conversions = Conversion::limit(15)->get();
+        return view('admin.transactions.send', ['conversions' => $conversions]);
     }
     public function send(Request $request)
     {
@@ -69,12 +71,28 @@ class TransactionController extends Controller
             [
                 'amount' => "required|numeric|min:5",
                 'phone_number' => "required",
-                'sales_type' => "required"
+                'sales_type' => "required",
+                'sender_name' => "max:150",
+                'sender_phone_number' => "max:20",
+                'recipient_name' => "max:150",
+                'amount_usd' => "required|numeric|min:0",
+
+            ],
+            [
+                'amount.required' => "Amount in Birr must be supplied",
+                'amount_usd.required' => "Amount in USD must be supplied",
+                'phone_number.required' => 'Recipient phone must be given',
+                'sales_type.required' => 'sales type must be selected',
+                'sender_name.max' => 'Sender name can only be a maximum of 150 characters',
+                'sender_phone_number.max' => 'Sender name can only be a maximum of 20 characters',
+                'recipient_name.max' => 'Recipient name can only be a maximum or 150 characters'
+
+
             ]
         );
 
         if ($validator->fails()) {
-            return response()->json(['success' => 'false', 'error' => ['error' => $validator->errors()]], 200);
+            return back()->with('error_message', $validator->errors()->first());
         }
         $sales_type = $request->sales_type;
         $phone_number = $request->phone_number;
@@ -90,6 +108,10 @@ class TransactionController extends Controller
         $sales->sales_type = $sales_type;
         $sales->phone_number = $phone_number;
         $sales->amount = $amount;
+        $sales->amount_usd = $request->amount_usd;
+        $sales->sender_name = $request->sender_name;
+        $sales->sender_phone_number = $request->sender_phone_number;
+        $sales->recipient_name = $request->recipient_name;
         $sales->save();
 
         $agentBalance = new Balance();
@@ -121,7 +143,7 @@ class TransactionController extends Controller
         <LANGUAGE2>1</LANGUAGE2>
         <SELECTOR>1</SELECTOR></COMMAND>";
         if ($sales_type == 1) {
-        $message = "<?xml version=\"1.0\"?>
+            $message = "<?xml version=\"1.0\"?>
             <COMMAND>
             <TYPE>EXPPBREQ</TYPE>              
             <DATE>" . $dt->toDateString() . "</DATE>
@@ -138,30 +160,35 @@ class TransactionController extends Controller
             <SELECTOR>1</SELECTOR>
             </COMMAND> ";
         }
+        try {
+            $response = Http::withHeaders(['Content-Type' => 'text/xml; charset=utf-8'])->send('POST', 'https://10.208.254.131/pretups/C2SReceiver?LOGIN=nazret1&PASSWORD=70c0ad9d73cafc653ba10ee56ce10033&REQUEST_GATEWAY_CODE=nazret&REQUEST_GATEWAY_TYPE=EXTGW&SERVICE_PORT=190&SOURCE_TYPE=EXTGW', ['body' => $message, 'verify' => false]);
+            //dd($response->body());
+            $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
+            //dd($clean_xml);
+            $cxml = simplexml_load_string($clean_xml);
+            $json = json_encode($cxml);
+            $array = json_decode($json, TRUE);
+            //dd($array);
+            $status = $array['TXNSTATUS'];
+            $sysmsg = $array['MESSAGE'];
+            if (!$agentBalance || !$sales || $status != "200") {
+                DB::rollback();
+                return back()->with('error_message', 'Error Occured: ' . $sysmsg);
+            } else {
+                // Else commit the queries
+                DB::commit();
 
-        $response = Http::withHeaders(['Content-Type' => 'text/xml; charset=utf-8'])->send('POST', 'https://10.208.254.131/pretups/C2SReceiver?LOGIN=nazret1&PASSWORD=70c0ad9d73cafc653ba10ee56ce10033&REQUEST_GATEWAY_CODE=nazret&REQUEST_GATEWAY_TYPE=EXTGW&SERVICE_PORT=190&SOURCE_TYPE=EXTGW', ['body' => $message, 'verify' => false]);
-        //dd($response->body());
-        $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
-        //dd($clean_xml);
-        $cxml = simplexml_load_string($clean_xml);
-        $json = json_encode($cxml);
-        $array = json_decode($json,TRUE);
-        //dd($array);
-        $status=$array['TXNSTATUS'];
-        $sysmsg=$array['MESSAGE'];
-        if (!$agentBalance || !$sales || $status!="200") {
+
+                //dd(["myMessage"=>$cxml->MESSAGE[0],"txID"=>$cxml->TXNID[0]]);
+                //return response()->json(['success' => 'true', 'xmlmessage' => $message, 'encrypted' => base64_encode($output)], 200);
+                return back()->with('success_message', $sysmsg);
+
+                //return response()->json(['success' => 'true', 'data' => ['yimulu_sales' => $cards, 'balance' => $agentBalance->balance]], 200);
+            }
+        } catch (Exception $ex) {
+            // DB::commit();
             DB::rollback();
-            return back()->with('error_message', 'Error Occured: '.$sysmsg);
-        } else {
-            // Else commit the queries
-            DB::commit();
-
-
-            //dd(["myMessage"=>$cxml->MESSAGE[0],"txID"=>$cxml->TXNID[0]]);
-            //return response()->json(['success' => 'true', 'xmlmessage' => $message, 'encrypted' => base64_encode($output)], 200);
-            return back()->with('success_message', $sysmsg);
-
-            //return response()->json(['success' => 'true', 'data' => ['yimulu_sales' => $cards, 'balance' => $agentBalance->balance]], 200);
+            return back()->with('error_message', 'network error occurred');
         }
     }
     /**
@@ -525,22 +552,19 @@ class TransactionController extends Controller
 <EXTCODE></EXTCODE>
 <EXTREFNUM>NAZ000163917557</EXTREFNUM>
 </COMMAND>";
-        
-        $balance=0;
-        try
-        {
+
+        $balance = 0;
+        try {
             $response = Http::withHeaders(['Content-Type' => 'text/xml; charset=utf-8'])->send('POST', 'https://10.208.254.131/pretups/C2SReceiver?LOGIN=nazret1&PASSWORD=70c0ad9d73cafc653ba10ee56ce10033&REQUEST_GATEWAY_CODE=nazret&REQUEST_GATEWAY_TYPE=EXTGW&SERVICE_PORT=190&SOURCE_TYPE=EXTGW', ['body' => $message, 'verify' => false]);
-        
+
             $clean_xml = str_ireplace(['SOAP-ENV:', 'SOAP:'], '', $response);
             $cxml = simplexml_load_string($clean_xml);
             //dd($clean_xml);
             $json = json_encode($cxml);
             $array = json_decode($json, true);
             $balance = $array['RECORD']['BALANCE'];
-        }
-        catch(Exception $ex)
-        {
-            $balance=-1;
+        } catch (Exception $ex) {
+            $balance = -1;
         }
         return $balance;
     }

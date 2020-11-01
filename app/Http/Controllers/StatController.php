@@ -800,7 +800,7 @@ class StatController extends Controller
         //dd($first);
         $result = DB::table('yimulu_sales')
             ->join('users', 'yimulu_sales.user_id', '=', 'users.id')
-            ->select('users.name', 'users.phone_number', DB::raw('yimulu_sales.amount, yimulu_sales.created_at as date, yimulu_sales.phone_number as zemed_phone'))
+            ->select('users.name', 'users.phone_number', DB::raw('yimulu_sales.amount, yimulu_sales.created_at as date, yimulu_sales.phone_number as zemed_phone, yimulu_sales.recipient_name, yimulu_sales.sender_name, yimulu_sales.sender_phone_number, yimulu_sales.amount_usd'))
             ->whereBetween('yimulu_sales.created_at', [$first, $last])
             ->orderBy('date', 'desc')
             ->limit(2000)

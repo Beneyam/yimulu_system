@@ -62,8 +62,10 @@
                     <th>No</th>
                     <th>Agent Name</th>
                     <th>User Name</th>
-                    <th>Zemed's Phone</th>
-                    <th>Amount</th>
+                    <th>Recipient</th>
+                    <th>Sender</th>
+                    <th>Amount|ETB</th>
+                    <th>Amount|USD</th>
                     <th>Date</th>
                   </tr>
                 </thead>
@@ -72,6 +74,7 @@
                   @php
                   $i=1;
                   $total_amount=0;
+                  $total_amount_usd=0;
                  
                   @endphp
                   @foreach($sales as $sale)
@@ -80,12 +83,15 @@
                     @php
                     $i++;
                     $total_amount+=$sale->amount;
+                    $total_amount_usd+=$sale->amount_usd;
                     @endphp
 
                     <td>{{$sale->name}}</td>
                     <td>{{$sale->phone_number}}</td>
-                    <td>{{$sale->zemed_phone}}</td>
+                    <td>{{$sale->recipient_name}},{{$sale->zemed_phone}}</td>
+                    <td>{{$sale->sender_name}},{{$sale->sender_phone_number}}</td>
                     <td>{{number_format($sale->amount)}}</td>
+                    <td>{{number_format($sale->amount_usd)}}</td>
                     <td>{{$sale->date}}</td>
                   </tr>
                   @endforeach
@@ -96,8 +102,11 @@
                   <tr>
                     <th></th>
                     <th></th>
+                    <th></th>
+                    <th></th>
                     <th>Total</th>
                      <th>{{number_format($total_amount)}}</th>
+                     <th>{{number_format($total_amount_usd)}}</th>
                     <th></th>
 
                   </tr>
