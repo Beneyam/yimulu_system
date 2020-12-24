@@ -50,6 +50,7 @@ class ConversionController extends Controller
         $this->validateInput($request);
         $conversion->dollar = $request['dollar'];
         $conversion->birr = $request['birr'];
+        $conversion->commission=$request['commission'];
         $conversion->save();
         return redirect()->route('admin.conversions.index');
     }
@@ -103,7 +104,7 @@ class ConversionController extends Controller
         $this->validateInput($request);
         $conversion->dollar = $request['dollar'];
         $conversion->birr = $request['birr'];
-
+        $conversion->commission=$request['commission'];
         $conversion->save();
         return redirect()->route('admin.conversions.index');
     }
@@ -124,7 +125,7 @@ class ConversionController extends Controller
 
             'dollar' => 'required|numeric',
             'birr' => 'required|numeric',
-
+            'commission' => 'required|numeric'
         ]);
     }
 }

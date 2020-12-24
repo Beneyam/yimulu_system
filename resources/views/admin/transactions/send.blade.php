@@ -43,7 +43,7 @@
                   <label for="phone">Zemed's Name</label>
                   <input type="string" class="form-control" id="recipient_name" name="recipient_name" >
                 </div>
-           
+
                 <div class="form-group col-md-6 col-lg-6 col-12">
                   <label for="sender_phone_number">Sender's Phone</label>
                   <input type="number" class="form-control" id="sender_phone_number" name="sender_phone_number" placeholder="xxxxxx">
@@ -57,9 +57,9 @@
                   <label for="buttons">Amount to send (USD)</label>
                   <div id="buttons">
                     @foreach($conversions as $conversion)
-                    
-                    <input type="button" class="btn btn-danger" value="${{$conversion->dollar}}" onclick="addConversion(this)" usd="{{$conversion->dollar}}" birr="{{$conversion->birr}}">
-  
+
+                    <input type="button" class="btn btn-danger" value="${{$conversion->dollar}}" onclick="addConversion(this)" usd="{{$conversion->dollar}}" birr="{{$conversion->birr}}" commission="{{ $conversion->commission }}">
+
                     <!-- /.col -->
                     @endforeach
                   </div>
@@ -71,12 +71,12 @@
                 <div class="form-group col-md-4 col-lg-4 col-12">
                   <label for="amount">Receive Amount(approx. ETB)</label>
                   <input readonly class="form-control" name="amount" type="number" id="amount" placeholder="in ETB" required>
-                
+
                 </div>
                 <div class="form-group col-md-4 col-lg-4 col-12">
                   <label for="bonus">Amount+Bonus(ETB)</label>
                   <input readonly class="form-control" type="number" id="bonus" placeholder="in ETB">
-                 
+
                 </div>
               </div>
               <div class="float-right">
@@ -86,7 +86,7 @@
           </div>
           <!-- /.card-body -->
         </div>
-        
+
         <!-- /.card -->
       </div>
     </div>
@@ -100,8 +100,9 @@ function addConversion(element) {
   //console.log(element.getAttribute('birr'));
   var birr=element.getAttribute('birr');
   var dollar=element.getAttribute('usd');
-  var withbonus=birr*1.5;
-  //console.log(withbonus);
+  var commission=element.getAttribute('commission');
+  var withbonus=birr*(1+parseFloat(commission));
+
   $('#amount').val(birr);
   $('#amount_usd').val(dollar);
   $('#bonus').val(withbonus);

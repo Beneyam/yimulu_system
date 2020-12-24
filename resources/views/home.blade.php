@@ -158,7 +158,7 @@
               <div class="col right-divider col-lg-2 col-md-2 col-6 mt-2">
                 <div class="mx-1 my-auto  justify-content-begin">
                   <h5 class="description-header">${{$conversion->dollar}}</h5>
-                  <span class="description-text">{{$conversion->birr}} Birr(+{{$conversion->birr*0.5}} Birr)</span>
+                  <span class="description-text">{{$conversion->birr}} Birr (<span class="bg-success">+{{$conversion->birr*$conversion->commission}} Birr</span>)</span>
                 </div>
                 <!-- /.description-block -->
               </div>
@@ -206,7 +206,7 @@
     </div>
     </a>
   </div>
-  
+
 </section>
 @endsection
 @section('javascript')
@@ -265,7 +265,7 @@
       });
 
 
-      
+
       $.ajax({
         type: 'GET',
         url: "{{route('webapi123bb.userstat')}}",
@@ -335,3 +335,4 @@
 </script>
 
 @endsection
+

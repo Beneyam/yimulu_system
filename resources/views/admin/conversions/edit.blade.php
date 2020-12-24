@@ -17,7 +17,7 @@
               <form action="{{route('admin.conversions.update',$conversion)}}" method="POST">
                 @csrf
                 {{method_field('PUT')}}
-                
+
                 <div class="form-group{{ $errors->has('dollar') ? ' has-error' : '' }}">
 
                                 <label for="dollar" class="col-md-4 control-label">Dollar Name</label>
@@ -29,9 +29,9 @@
                                         <strong>{{ $errors->first('dollar') }}</strong>
                                     </span>
                                     @endif
-                               
+
                                 </div>
-                               
+
                             </div>
                             <div class="form-group{{ $errors->has('birr') ? ' has-error' : '' }}">
                                 <label for="birr" class="col-md-4 control-label">Birr</label>
@@ -43,12 +43,26 @@
                                         <strong>{{ $errors->first('birr') }}</strong>
                                     </span>
                                     @endif
-                               
+
                                 </div>
-                               
+
                             </div>
-                            
-                            
+                            <div class="form-group{{ $errors->has('commission') ? ' has-error' : '' }}">
+                                <label for="commission" class="col-md-4 control-label">Commission Factor</label>
+
+                                <div class="col-md-6">
+                                    <input type="text" id="commission" class="form-control" name="commission" value="{{$conversion->commission}}">
+                                    @if ($errors->has('commission'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('commission') }}</strong>
+                                    </span>
+                                    @endif
+
+                                </div>
+
+                            </div>
+
+
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
                                     <button type="submit" class="btn btn-primary">

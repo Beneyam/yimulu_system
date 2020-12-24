@@ -26,7 +26,7 @@
                   <th>No</th>
                   <th>Dollar</th>
                   <th>Birr</th>
-                  <th>Status</th>
+                  <th>Comission Factor</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -41,11 +41,11 @@
                   @php
                   $i++;
                   @endphp
-                  
+
                   <td>{{$conversion->dollar}}</td>
                   <td>{{$conversion->birr}}</td>
-                 
-                  <td>{{$conversion->terminal_status?'Active':'Inactive'}}</td>
+
+                  <td>{{$conversion->commission}}</td>
                   <td>
                     <a href="{{ route('admin.conversions.edit', ['conversion' => $conversion->id]) }}" style="width:100%" class="btn btn-primary"><i class="mdi mdi-cloud-download"></i>Edit</a>
                   </td>
@@ -53,7 +53,7 @@
                 @endforeach
 
               </tbody>
-              
+
             </table>
           </div>
           <h5>Note: only the first five conversions will be visible at home page</h5>

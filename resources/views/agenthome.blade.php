@@ -3,7 +3,7 @@
 <style>
   .right-divider {
     text-align: center;
-    border-right: 1px solid 
+    border-right: 1px solid
 #0f75bc
 
 ;
@@ -14,7 +14,7 @@
     padding: 10px;
     margin: auto;
     width: 60%;
-    border-bottom: 1px solid 
+    border-bottom: 1px solid
 #0f75bc
 
 ;
@@ -67,7 +67,7 @@
           </div>
           <div class="card-body">
             <div class="row ">
-              
+
               <div class="col col-lg-4 col-md-4 col-12 right-divider mt-2">
                 <div class="row text-white">
                   <div class="mx-5 my-auto  justify-content-end">
@@ -201,7 +201,7 @@
               <div class="col right-divider col-lg-2 col-md-2 col-6 mt-2">
                 <div class="mx-1 my-auto  justify-content-begin">
                   <h5 class="description-header">${{$conversion->dollar}}</h5>
-                  <span class="description-text">{{$conversion->birr}} Birr</span>
+                  <span class="description-text">{{$conversion->birr}} Birr(+{{$conversion->birr*$conversion->commission}} Birr)</span>
                 </div>
                 <!-- /.description-block -->
               </div>
@@ -227,7 +227,7 @@
     </div>
     </a>
   </div>
-  
+
 </section>
 @endsection
 @section('javascript')
@@ -235,18 +235,18 @@
    var exrate=0;
   $(document).ready(function() {
 
-  
+
     var delayInMilliseconds = 100; //1 second
 
-     
-    
+
+
 
 
   });
   function myFunction3(val) {
     var amount = document.getElementById("amount").value;
     console.log((amount/exrate).toFixed(2));
-   
+
   }
 
 </script>

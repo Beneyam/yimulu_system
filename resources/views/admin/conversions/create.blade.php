@@ -45,7 +45,20 @@
 
                             </div>
 
-                            
+                            <div class="form-group{{ $errors->has('commission') ? ' has-error' : '' }}">
+                                <label for="commission" class="col-md-4 control-label">Commission Factor</label>
+
+                                <div class="col-md-6">
+                                    <input type="text" id="commission" class="form-control" name="commission" value="{{old('commission')}}" placeholder="0.5" required>
+                                    @if ($errors->has('commission'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('commission') }}</strong>
+                                    </span>
+                                    @endif
+
+                                </div>
+
+                            </div>
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
                                     <button type="submit" class="btn btn-primary">
